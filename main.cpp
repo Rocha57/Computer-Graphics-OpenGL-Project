@@ -44,10 +44,11 @@ GLfloat   quadP[]= {4, 4, 1};
 GLint    defineView=0;
 GLint    defineProj=1;
 GLfloat  raio   = 1;
-GLfloat  angulo = 0.5*PI;
+GLfloat  angulo = 0.35*PI;
 //GLfloat  obsP[] = {raio*cos(angulo), 5.5, raio*sin(angulo)};
 GLfloat  obsP[] = {0,3,0};
-GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};
+
+GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
 GLfloat  incy   = 0.5;
 GLfloat  inca   = 0.03;
 GLfloat  angBule = 0;
@@ -76,7 +77,7 @@ char *imagens[] = {"img01.bmp","img02.bmp", "img03.bmp", "img04.bmp", "img05.bmp
 void criaDefineTexturas()
 {
 	//----------------------------------------- Mesa
-	glGenTextures(1, &texture[0]);
+	/*glGenTextures(1, &texture[0]);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -87,7 +88,7 @@ void criaDefineTexturas()
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
+		imag.ImageData());*/
 
 	//----------------------------------------- Chao y=0
 	glGenTextures(1, &texture[1]);
@@ -138,7 +139,7 @@ void criaDefineTexturas()
 		imag.ImageData());
 	//----------------------------------------- Tela
 
-	glGenTextures(1, &texture[4]);
+	/*glGenTextures(1, &texture[4]);
 	glBindTexture(GL_TEXTURE_2D, texture[4]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -149,7 +150,7 @@ void criaDefineTexturas()
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
+		imag.ImageData());*/
 
 	//*****************************************************
 }
@@ -254,7 +255,7 @@ void drawScene(){
 
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	glColor4f(BLACK);
+	glColor4f(WHITE);
 	glBegin(GL_LINES);
 		glVertex3i( 0, 0, 0);
 		glVertex3i(10, 0, 0);
@@ -291,7 +292,7 @@ void display(void){
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 1, 0);
+	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
 	//-zC/2,0,-xC
 
 	if (incrementador >= 4) {
@@ -334,6 +335,21 @@ void keyboard(unsigned char key, int x, int y){
 		defineProj=(defineProj+1)%2;
 		glutPostRedisplay();
 		break;
+	//---------------------------- Observador
+	case 'o':
+		obsP[0] = 0;
+		obsP[1] = 3;
+		obsP[2] = 0;
+		glutPostRedisplay();
+		break;
+	case 49:
+		obsP[0] = 0;
+		obsP[1] = 3;
+		obsP[2] = zC/2;
+		
+		glutPostRedisplay();
+		break;
+
 	//--------------------------- Escape
 	case 27:
 		exit(0);
@@ -342,21 +358,23 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 void teclasNotAscii(int key, int x, int y){
-    if(key == GLUT_KEY_UP)
+    /*if(key == GLUT_KEY_UP)
 		obsP[1]=obsP[1]+incy;
-	if(key == GLUT_KEY_DOWN)
-		obsP[1]=obsP[1]-incy;
+		if(key == GLUT_KEY_DOWN)
+		obsP[1]=obsP[1]-incy;*/
 	if(key == GLUT_KEY_LEFT)
-		angulo=angulo+inca;
+		angulo = angulo+inca;
 	if(key == GLUT_KEY_RIGHT)
-		angulo=angulo-inca;
+		angulo = angulo-inca;
 
 	/*if (obsP[1]> yC)
 		obsP[1]= yC;
     if (obsP[1]<-yC)
 		obsP[1]=-yC;*/
-    obsP[0] = raio*cos(angulo);
-	obsP[2] = raio*sin(angulo);
+    //obsP[0] = cos(angulo);
+		olharPara[0] = cos(angulo);
+		//obsP[2] = sin(angulo);
+		olharPara[2] = sin(angulo);
 
 	glutPostRedisplay();
 }

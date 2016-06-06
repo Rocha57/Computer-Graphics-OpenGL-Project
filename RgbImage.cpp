@@ -21,7 +21,7 @@
 #include "RgbImage.h"
 
 #ifndef RGBIMAGE_DONT_USE_OPENGL
-#include <OpenGL/gl.h>
+#include <GL/glut.h>
 #endif
 
 RgbImage::RgbImage( int numRows, int numCols )
@@ -30,7 +30,7 @@ RgbImage::RgbImage( int numRows, int numCols )
 	NumCols = numCols;
 	ImagePtr = new unsigned char[NumRows*GetNumBytesPerRow()];
 	if ( !ImagePtr ) {
-		fprintf(stderr, "Unable to allocate memory for %ld x %ld bitmap.\n", 
+		fprintf(stderr, "Unable to allocate memory for %ld x %ld bitmap.\n",
 				NumRows, NumCols);
 		Reset();
 		ErrorCode = MemoryError;
@@ -53,8 +53,8 @@ RgbImage::RgbImage( int numRows, int numCols )
  *  Author: Sam Buss December 2001.
  **********************************************************************/
 
-bool RgbImage::LoadBmpFile( const char* filename ) 
-{  
+bool RgbImage::LoadBmpFile( const char* filename )
+{
 	Reset();
 	FILE* infile = fopen( filename, "rb" );		// Open for reading binary data
 	if ( !infile ) {
@@ -74,7 +74,7 @@ bool RgbImage::LoadBmpFile( const char* filename )
 		int bitsPerPixel = readShort( infile );
 		skipChars( infile, 4+4+4+4+4+4 );		// Skip 6 more fields
 
-		if ( NumCols>0 && NumCols<=100000 && NumRows>0 && NumRows<=100000  
+		if ( NumCols>0 && NumCols<=100000 && NumRows>0 && NumRows<=100000
 			&& bitsPerPixel==24 && !feof(infile) ) {
 			fileFormatOK = true;
 		}
@@ -90,7 +90,7 @@ bool RgbImage::LoadBmpFile( const char* filename )
 	// Allocate memory
 	ImagePtr = new unsigned char[NumRows*GetNumBytesPerRow()];
 	if ( !ImagePtr ) {
-		fprintf(stderr, "Unable to allocate memory for %ld x %ld bitmap: %s.\n", 
+		fprintf(stderr, "Unable to allocate memory for %ld x %ld bitmap: %s.\n",
 				NumRows, NumCols, filename);
 		Reset();
 		ErrorCode = MemoryError;
@@ -139,7 +139,7 @@ short RgbImage::readShort( FILE* infile )
 }
 
 long RgbImage::readLong( FILE* infile )
-{  
+{
 	// Read in 32 bit integer
 	unsigned char byte0, byte1, byte2, byte3;
 	byte0 = fgetc(infile);			// Read bytes, low order to high order
@@ -225,7 +225,7 @@ bool RgbImage::WriteBmpFile( const char* filename )
 }
 
 void RgbImage::writeLong( long data, FILE* outfile )
-{  
+{
 	// Read in 32 bit integer
 	unsigned char byte0, byte1, byte2, byte3;
 	byte0 = (unsigned char)(data&0x000000ff);		// Write bytes, low order to high order
@@ -240,7 +240,7 @@ void RgbImage::writeLong( long data, FILE* outfile )
 }
 
 void RgbImage::writeShort( short data, FILE* outfile )
-{  
+{
 	// Read in 32 bit integer
 	unsigned char byte0, byte1;
 	byte0 = data&0x000000ff;		// Write bytes, low order to high order
@@ -257,7 +257,7 @@ void RgbImage::writeShort( short data, FILE* outfile )
 
 void RgbImage::SetRgbPixelf( long row, long col, double red, double green, double blue )
 {
-	SetRgbPixelc( row, col, doubleToUnsignedChar(red), 
+	SetRgbPixelc( row, col, doubleToUnsignedChar(red),
 							doubleToUnsignedChar(green),
 							doubleToUnsignedChar(blue) );
 }
@@ -316,13 +316,13 @@ bool RgbImage::LoadFromOpenglBuffer()					// Load the bitmap from the current Op
 	glGetIntegerv( GL_VIEWPORT, viewportData );
 	int& vWidth = viewportData[2];
 	int& vHeight = viewportData[3];
-	
+
 	if ( ImagePtr==0 ) { // If no memory allocated
 		NumRows = vHeight;
 		NumCols = vWidth;
 		ImagePtr = new unsigned char[NumRows*GetNumBytesPerRow()];
 		if ( !ImagePtr ) {
-			fprintf(stderr, "Unable to allocate memory for %ld x %ld buffer.\n", 
+			fprintf(stderr, "Unable to allocate memory for %ld x %ld buffer.\n",
 					NumRows, NumCols);
 			Reset();
 			ErrorCode = MemoryError;
@@ -343,7 +343,7 @@ bool RgbImage::LoadFromOpenglBuffer()					// Load the bitmap from the current Op
 	// Restore the row length in glPixelStorei  (really ought to restore alignment too).
 	if ( vWidth>=NumCols ) {
 		glPixelStorei( GL_UNPACK_ROW_LENGTH, oldGlRowLen );
-	}	
+	}
 	return true;
 }
 
