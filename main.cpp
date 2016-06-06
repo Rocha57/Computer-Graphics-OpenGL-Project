@@ -71,7 +71,7 @@ RgbImage imag;
 
 GLint incrementador;
 
-char *imagens[] = {"img01.bmp","img02.bmp", "img03.bmp", "img04.bmp", "img05.bmp"};
+//char *imagens[] = {"img01.bmp","img02.bmp", "img03.bmp", "img04.bmp", "img05.bmp"};
 
 
 void criaDefineTexturas()
@@ -104,39 +104,20 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
-	//*****************************************************
-	// A IMPLEMENTAR PELOS ALUNOS
-	//
-	//----------------------------------------- Chaleira
-
-
 	//----------------------------------------- Parede z=0
 	glGenTextures(1, &texture[2]);
 	glBindTexture(GL_TEXTURE_2D, texture[2]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	imag.LoadBmpFile("parede.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
-	//----------------------------------------- Parede x=0
 
-	glGenTextures(1, &texture[3]);
-	glBindTexture(GL_TEXTURE_2D, texture[3]);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("papel_parede.bmp");
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
 	//----------------------------------------- Tela
 
 	/*glGenTextures(1, &texture[4]);
@@ -207,11 +188,6 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-
-	//*****************************************************
-	// A IMPLEMENTAR PELOS ALUNOS
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chaleira
-
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Tela
 	//Tem de se mandar para a origem, mapear e voltar a mandar?
 	/*glEnable(GL_TEXTURE_2D);
@@ -231,26 +207,58 @@ void drawScene(){
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
+
+		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
+
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, -xC );
-			glTexCoord2f(10.0f,0.0f); glVertex3i( zC/2, 0, -xC );
-			glTexCoord2f(10.0f,10.0f); glVertex3i( zC/2, zC/2, -xC);
-			glTexCoord2f(0.0f,10.0f); glVertex3i( -zC/2,  zC/2,  -xC);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( zC/2, 0, -xC );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( zC/2, zC/2, -xC);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -zC/2,  zC/2,  -xC);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	//----------------------------------------------------- Parede em frente a z
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+
+		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
+
+			glTexCoord2f(0.0f,0.0f); glVertex3i( zC/2,  0, xC );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( -zC/2, 0, xC );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -zC/2, zC/2, xC);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( zC/2,  zC/2,  xC);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede x=0
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[3]);
+	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, -xC );
-			glTexCoord2f(10.0f,0.0f); glVertex3i( -zC/2, yC, -xC );
-			glTexCoord2f(10.0f,10.0f); glVertex3i( -zC/2, yC, yC);
-			glTexCoord2f(0.0f,10.0f); glVertex3i( -zC/2,  0,  yC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, xC/2);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( -zC/2, yC, -xC/2 );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -zC/2, yC, yC);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -zC/2,  0,  yC);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede em frente ao x=0
+	/*glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( xC/2,  0, xC );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( zC/2, yC, xC );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( zC/2, yC, -yC);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( zC/2,  0,  -yC);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);*/
 	//*****************************************************
 
 
@@ -346,7 +354,7 @@ void keyboard(unsigned char key, int x, int y){
 		obsP[0] = 0;
 		obsP[1] = 3;
 		obsP[2] = zC/2;
-		
+
 		glutPostRedisplay();
 		break;
 
