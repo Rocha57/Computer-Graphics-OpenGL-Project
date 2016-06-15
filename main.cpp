@@ -137,9 +137,16 @@ void drawScene(){
 	//== Desenha cenas e aplica as texturas necessárias
 
 	//Draw Table Leg
+	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		glRotatef (90, -1, 0, 0);
-		glutSolidCone(1,3.5,16,16);
+		//glutSolidCone(1,3.5,16,16);
+		GLUquadricObj* quadobj1 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj1, GLU_FILL   );
+		gluQuadricNormals   ( quadobj1, GLU_SMOOTH );
+		gluQuadricTexture	(quadobj1, GL_TRUE);
+		glBindTexture(GL_TEXTURE_2D, texture[1] );
+		gluCylinder(quadobj1, 1, 0, 3.5, 100, 100);
 	glPopMatrix();
 
 	//Draw Table Top
@@ -147,11 +154,15 @@ void drawScene(){
 	glPushMatrix();
 		glTranslatef(0,4,0);
 		glRotatef(90,1,0,0);
-		glutSolidCone(7.5,0.5,100,100);
+		/*glutSolidCone(7.5,0.5,100,100);*/
+		GLUquadricObj* quadobj2 = gluNewQuadric();
+		//gluQuadricTexture(quadobj2, GL_TRUE);
+		//glBindTexture(GL_TEXTURE_2D, texture[1] );
+		gluCylinder(quadobj2, 7.5, 0, 0.5, 100, 100);
 	glPopMatrix();
 
 	//Draw Table Limits
-	glColor4f(LARANJA);
+	glColor4f(VERDE);
 	/*glPushMatrix();
 		glTranslatef(0,4.5,0);
 		glRotatef(90,1,0,0);
@@ -163,7 +174,6 @@ void drawScene(){
 		GLUquadricObj*  y = gluNewQuadric ( );
 		gluQuadricDrawStyle ( y, GLU_FILL   );
 		gluQuadricNormals   ( y, GLU_SMOOTH );
-		gluQuadricTexture   ( y, GL_TRUE    );
 		gluCylinder ( y, 7.5, 7.5, 0.5,150,150);
 	glPopMatrix();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
