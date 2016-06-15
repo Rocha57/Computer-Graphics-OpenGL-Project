@@ -136,15 +136,45 @@ void drawScene(){
 	//==============================================================
 	//== Desenha cenas e aplica as texturas necessárias
 
+	//Draw Table Leg
+	glPushMatrix();
+		glRotatef (90, -1, 0, 0);
+		glutSolidCone(1,3.5,16,16);
+	glPopMatrix();
+
+	//Draw Table Top
+	glColor4f(VERDE);
+	glPushMatrix();
+		glTranslatef(0,4,0);
+		glRotatef(90,1,0,0);
+		glutSolidCone(7.5,0.5,100,100);
+	glPopMatrix();
+
+	//Draw Table Limits
+	glColor4f(LARANJA);
+	/*glPushMatrix();
+		glTranslatef(0,4.5,0);
+		glRotatef(90,1,0,0);
+		glutSolidTorus(3.75,3.8,100,100);
+	glPopMatrix();*/
+	glPushMatrix();
+		glTranslatef(0,4.2,0);
+		glRotatef(90,1,0,0);
+		GLUquadricObj*  y = gluNewQuadric ( );
+		gluQuadricDrawStyle ( y, GLU_FILL   );
+		gluQuadricNormals   ( y, GLU_SMOOTH );
+		gluQuadricTexture   ( y, GL_TRUE    );
+		gluCylinder ( y, 7.5, 7.5, 0.5,150,150);
+	glPopMatrix();
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
-			glTexCoord2f(10.0f,0.0f); glVertex3i( corner, 0, -corner );
-			glTexCoord2f(10.0f,10.0f); glVertex3i( corner, 0, corner);
-			glTexCoord2f(0.0f,10.0f); glVertex3i( -corner,  0,  corner);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, 0, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  0,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -197,8 +227,6 @@ void drawScene(){
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  -corner);
 			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, corner);
 			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  -corner);
 		glEnd();
