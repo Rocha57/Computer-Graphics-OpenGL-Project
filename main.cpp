@@ -9,7 +9,7 @@
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #else
-//#include <GL/glut.h>
+#include <GL/glut.h>
 #endif
 
 #include "RgbImage.h"
