@@ -9,7 +9,7 @@
 #include <OpenGL/OpenGL.h>
 #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+//#include <GL/glut.h>
 #endif
 
 #include "RgbImage.h"
@@ -30,7 +30,7 @@
 //===========================================================Variaveis e constantes
 
 //------------------------------------------------------------ Sistema Coordenadas
-GLfloat   xC=10.0, yC=10.0, zC=20.0;
+GLfloat   corner = 15.0;
 GLint     wScreen=800, hScreen=600;
 GLfloat   mesa=3.0;
 GLfloat   bule=1.3;
@@ -46,9 +46,14 @@ GLint    defineProj=1;
 GLfloat  raio   = 1;
 GLfloat  angulo = 0.35*PI;
 //GLfloat  obsP[] = {raio*cos(angulo), 5.5, raio*sin(angulo)};
-GLfloat  obsP[] = {0,3,0};
+//<<<<<<< Updated upstream
+//GLfloat  obsP[] = {0,3,0};
 
-GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+//GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+//=======
+GLfloat  obsP[] = {0,5,0};
+GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};
+//>>>>>>> Stashed changes
 GLfloat  incy   = 0.5;
 GLfloat  inca   = 0.03;
 GLfloat  angBule = 0;
@@ -180,10 +185,10 @@ void drawScene(){
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, -xC );
-			glTexCoord2f(10.0f,0.0f); glVertex3i( xC, 0, -xC );
-			glTexCoord2f(10.0f,10.0f); glVertex3i( xC, 0, xC);
-			glTexCoord2f(0.0f,10.0f); glVertex3i( -zC/2,  0,  xC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
+			glTexCoord2f(10.0f,0.0f); glVertex3i( corner, 0, -corner );
+			glTexCoord2f(10.0f,10.0f); glVertex3i( corner, 0, corner);
+			glTexCoord2f(0.0f,10.0f); glVertex3i( -corner,  0,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -210,10 +215,10 @@ void drawScene(){
 
 		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
 
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, -xC );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( zC/2, 0, -xC );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( zC/2, zC/2, -xC);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -zC/2,  zC/2,  -xC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, -corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  corner,  -corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -226,10 +231,10 @@ void drawScene(){
 
 		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
 
-			glTexCoord2f(0.0f,0.0f); glVertex3i( zC/2,  0, xC );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( -zC/2, 0, xC );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -zC/2, zC/2, xC);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( zC/2,  zC/2,  xC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, corner, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -239,26 +244,26 @@ void drawScene(){
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -zC/2,  0, xC/2);
-			glTexCoord2f(1.0f,0.0f); glVertex3i( -zC/2, yC, -xC/2 );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -zC/2, yC, yC);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -zC/2,  0,  yC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, corner);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, -corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, corner, -corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  corner,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede em frente ao x=0
-	/*glEnable(GL_TEXTURE_2D);
+	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( xC/2,  0, xC );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( zC/2, yC, xC );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( zC/2, yC, -yC);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( zC/2,  0,  -yC);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  corner);
 		glEnd();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);*/
+	glDisable(GL_TEXTURE_2D);
 	//*****************************************************
 
 
@@ -277,7 +282,6 @@ void drawScene(){
 		glVertex3i( 0, 0,10);
 	glEnd();
 
-
 }
 
 void display(void){
@@ -292,8 +296,8 @@ void display(void){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	switch (defineProj) {
-		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, zC); break;
-		default: glOrtho (-xC,xC,-yC,yC,-zC,zC);
+		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, corner); break;
+		default: glOrtho (-corner,corner,-corner,corner,-corner,corner);
 			break;
 	}
 
@@ -353,7 +357,7 @@ void keyboard(unsigned char key, int x, int y){
 	case 49:
 		obsP[0] = 0;
 		obsP[1] = 3;
-		obsP[2] = zC/2;
+		obsP[2] = corner/2;
 
 		glutPostRedisplay();
 		break;
@@ -366,10 +370,10 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 void teclasNotAscii(int key, int x, int y){
-    /*if(key == GLUT_KEY_UP)
+    if(key == GLUT_KEY_UP)
 		obsP[1]=obsP[1]+incy;
 		if(key == GLUT_KEY_DOWN)
-		obsP[1]=obsP[1]-incy;*/
+		obsP[1]=obsP[1]-incy;
 	if(key == GLUT_KEY_LEFT)
 		angulo = angulo+inca;
 	if(key == GLUT_KEY_RIGHT)
@@ -379,10 +383,15 @@ void teclasNotAscii(int key, int x, int y){
 		obsP[1]= yC;
     if (obsP[1]<-yC)
 		obsP[1]=-yC;*/
+//<<<<<<< Updated upstream
     //obsP[0] = cos(angulo);
 		olharPara[0] = cos(angulo);
 		//obsP[2] = sin(angulo);
 		olharPara[2] = sin(angulo);
+//=======
+    olharPara[0] = raio*cos(angulo);
+	olharPara[2] = raio*sin(angulo);
+//>>>>>>> Stashed changes
 
 	glutPostRedisplay();
 }
