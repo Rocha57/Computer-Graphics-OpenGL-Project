@@ -1,3 +1,6 @@
+//COMPILE
+//g++ main.cpp RgbImage.cpp -lGL -lglut -lGLU -o main
+
 //For windows
 //#include <windows.h>
 #include <stdlib.h>
@@ -45,15 +48,13 @@ GLint    defineView=0;
 GLint    defineProj=1;
 GLfloat  raio   = 1;
 GLfloat  angulo = 0.35*PI;
-//GLfloat  obsP[] = {raio*cos(angulo), 5.5, raio*sin(angulo)};
-//<<<<<<< Updated upstream
-//GLfloat  obsP[] = {0,3,0};
 
-//GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
-//=======
-GLfloat  obsP[] = {0,5,0};
-GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};
-//>>>>>>> Stashed changes
+//====== Coordenadas do observador e coordenadas para onde ele olha
+
+GLfloat  obsP[] = {0,3,0};
+GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+
+
 GLfloat  incy   = 0.5;
 GLfloat  inca   = 0.03;
 GLfloat  angBule = 0;
@@ -66,34 +67,15 @@ GLint    maxR  =20;
 GLint    numFrames =5;              //numero de imagens a colocar em loop na tela
 GLint    msec=100;					//.. definicao do timer (actualizacao)
 
-//================================================================================
-//=========================================================================== INIT
 
 //------------------------------------------------------------ Texturas
 GLuint  texture[4];
-int  tex;
 RgbImage imag;
-
-GLint incrementador;
-
-//char *imagens[] = {"img01.bmp","img02.bmp", "img03.bmp", "img04.bmp", "img05.bmp"};
 
 
 void criaDefineTexturas()
 {
-	//----------------------------------------- Mesa
-	/*glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("mesa.bmp");
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());*/
+
 
 	//----------------------------------------- Chao y=0
 	glGenTextures(1, &texture[1]);
@@ -123,22 +105,7 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
-	//----------------------------------------- Tela
-
-	/*glGenTextures(1, &texture[4]);
-	glBindTexture(GL_TEXTURE_2D, texture[4]);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile(imagens[incrementador]);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());*/
-
-	//*****************************************************
+	
 }
 
 
@@ -146,7 +113,7 @@ void init(void)
 {
 	glClearColor(BLACK);
 	glShadeModel(GL_SMOOTH);
-	incrementador = 0;
+	
 	criaDefineTexturas();
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
@@ -165,20 +132,8 @@ void resizeWindow(GLsizei w, GLsizei h)
 
 
 void drawScene(){
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Mesa
-	/*glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[0]);
-	glPushMatrix();
-		glTranslatef( mesaP[0], mesaP[1]+mesa/2, mesaP[2]);
-		glRotatef (       90, -1, 0, 0);
-		GLUquadricObj*  y = gluNewQuadric ( );
-		gluQuadricDrawStyle ( y, GLU_FILL   );
-		gluQuadricNormals   ( y, GLU_SMOOTH );
-		gluQuadricTexture   ( y, GL_TRUE    );
-		gluSphere ( y, 0.5*mesa, 150, 150);
-		gluDeleteQuadric ( y );
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);*/
+	//==============================================================
+	//== Desenha cenas e aplica as texturas necessárias
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
 	glEnable(GL_TEXTURE_2D);
@@ -193,28 +148,13 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Tela
-	//Tem de se mandar para a origem, mapear e voltar a mandar?
-	/*glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[4]);
-	glPushMatrix();
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( quadP[0],  quadP[1], quadP[2] );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( quadP[0]+quad, quadP[1], quadP[2]);
-			glTexCoord2f(1.0f,1.0f); glVertex3i( quadP[0]+quad, quadP[1]+quad, quadP[2]);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( quadP[0],  quadP[1]+quad,  quadP[2]);
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);*/
+	
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede z=0
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede z negativa
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-
-		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
-
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
 			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, -corner);
@@ -223,14 +163,11 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//----------------------------------------------------- Parede em frente a z
+	//----------------------------------------------------- Parede z positiva
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-
-		/*Aqui tive de meter as coord2f a a e a 1, não percebi porque, mas tass*/
-
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, corner );
 			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, corner, corner);
@@ -239,7 +176,7 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede x=0
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Parede x negativa
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -252,7 +189,7 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede em frente ao x=0
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Parede x positiva
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -260,11 +197,11 @@ void drawScene(){
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
 			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  -corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
-	//*****************************************************
+	
 
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
@@ -295,23 +232,17 @@ void display(void){
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Projeccao]
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	switch (defineProj) {
-		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, corner); break;
-		default: glOrtho (-corner,corner,-corner,corner,-corner,corner);
-			break;
-	}
+
+	//GluPerspective vai ser tridimensional
+	gluPerspective(88.0, wScreen/hScreen, 0.1, 3*corner); 
+	
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
-	//-zC/2,0,-xC
 
-	if (incrementador >= 4) {
-		incrementador = 0;
-	} else{
-		incrementador += 1;
-	}
+	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
+	
 
 	criaDefineTexturas();
 
@@ -341,12 +272,8 @@ void keyboard(unsigned char key, int x, int y){
 	case 'T':
 		glutPostRedisplay();
 		break;
-	//--------------------------- Projeccao
-	case 'q':
-	case 'Q':
-		defineProj=(defineProj+1)%2;
-		glutPostRedisplay();
-		break;
+		
+	
 	//---------------------------- Observador
 	case 'o':
 		obsP[0] = 0;
@@ -357,7 +284,7 @@ void keyboard(unsigned char key, int x, int y){
 	case 49:
 		obsP[0] = 0;
 		obsP[1] = 3;
-		obsP[2] = corner/2;
+		obsP[2] = corner;
 
 		glutPostRedisplay();
 		break;
@@ -379,19 +306,13 @@ void teclasNotAscii(int key, int x, int y){
 	if(key == GLUT_KEY_RIGHT)
 		angulo = angulo-inca;
 
-	/*if (obsP[1]> yC)
-		obsP[1]= yC;
-    if (obsP[1]<-yC)
-		obsP[1]=-yC;*/
-//<<<<<<< Updated upstream
-    //obsP[0] = cos(angulo);
 		olharPara[0] = cos(angulo);
-		//obsP[2] = sin(angulo);
+		
 		olharPara[2] = sin(angulo);
 //=======
-    olharPara[0] = raio*cos(angulo);
-	olharPara[2] = raio*sin(angulo);
-//>>>>>>> Stashed changes
+    	olharPara[0] = raio*cos(angulo);
+		olharPara[2] = raio*sin(angulo);
+
 
 	glutPostRedisplay();
 }
