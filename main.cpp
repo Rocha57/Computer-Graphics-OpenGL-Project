@@ -31,6 +31,7 @@
 
 //------------------------------------------------------------ Sistema Coordenadas
 GLfloat   corner = 15.0;
+GLfloat   altura = 25.0;
 GLint     wScreen=800, hScreen=600;
 GLfloat   mesa=3.0;
 GLfloat   bule=1.3;
@@ -47,12 +48,12 @@ GLfloat  raio   = 1;
 GLfloat  angulo = 0.35*PI;
 //GLfloat  obsP[] = {raio*cos(angulo), 5.5, raio*sin(angulo)};
 //<<<<<<< Updated upstream
-//GLfloat  obsP[] = {0,3,0};
+GLfloat  obsP[] = {0,3,0};
 
-//GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
 //=======
-GLfloat  obsP[] = {0,5,0};
-GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};
+/*GLfloat  obsP[] = {0,5,0};
+GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};*/
 //>>>>>>> Stashed changes
 GLfloat  incy   = 0.5;
 GLfloat  inca   = 0.03;
@@ -217,8 +218,8 @@ void drawScene(){
 
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, -corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  corner,  -corner);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, -corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -233,8 +234,8 @@ void drawScene(){
 
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, corner, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  corner);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, altura, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -246,8 +247,8 @@ void drawScene(){
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, corner);
 			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, -corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, corner, -corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  corner,  corner);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, altura, -corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -259,8 +260,8 @@ void drawScene(){
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  corner);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -296,7 +297,7 @@ void display(void){
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	switch (defineProj) {
-		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, corner); break;
+		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, 3*corner); break;
 		default: glOrtho (-corner,corner,-corner,corner,-corner,corner);
 			break;
 	}
@@ -357,7 +358,7 @@ void keyboard(unsigned char key, int x, int y){
 	case 49:
 		obsP[0] = 0;
 		obsP[1] = 3;
-		obsP[2] = corner/2;
+		obsP[2] = corner;
 
 		glutPostRedisplay();
 		break;
