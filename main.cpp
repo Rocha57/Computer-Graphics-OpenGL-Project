@@ -49,25 +49,13 @@ GLint    defineView=0;
 GLint    defineProj=1;
 GLfloat  raio   = 1;
 GLfloat  angulo = 0.35*PI;
-<<<<<<< HEAD
 
 //====== Coordenadas do observador e coordenadas para onde ele olha
 
 GLfloat  obsP[] = {0,3,0};
 GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
 
-
-=======
-//GLfloat  obsP[] = {raio*cos(angulo), 5.5, raio*sin(angulo)};
-//<<<<<<< Updated upstream
-GLfloat  obsP[] = {0,3,0};
-
-GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
 //=======
-/*GLfloat  obsP[] = {0,5,0};
-GLfloat	 olharPara[] = {raio*cos(angulo), 0, raio*sin(angulo)};*/
-//>>>>>>> Stashed changes
->>>>>>> 1e8d6c2979118a96546d8bd1b0a7080890ebfecf
 GLfloat  incy   = 0.5;
 GLfloat  inca   = 0.03;
 GLfloat  angBule = 0;
@@ -209,13 +197,10 @@ void drawScene(){
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
 			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
-<<<<<<< HEAD
 			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, corner, corner);
 			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  corner,  -corner);
-=======
 			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, corner);
 			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  -corner);
->>>>>>> 1e8d6c2979118a96546d8bd1b0a7080890ebfecf
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -250,18 +235,9 @@ void display(void){
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Projeccao]
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-<<<<<<< HEAD
 
 	//GluPerspective vai ser tridimensional
 	gluPerspective(88.0, wScreen/hScreen, 0.1, 3*corner); 
-	
-=======
-	switch (defineProj) {
-		case 1: gluPerspective(88.0, wScreen/hScreen, 0.1, 3*corner); break;
-		default: glOrtho (-corner,corner,-corner,corner,-corner,corner);
-			break;
-	}
->>>>>>> 1e8d6c2979118a96546d8bd1b0a7080890ebfecf
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
@@ -298,8 +274,6 @@ void keyboard(unsigned char key, int x, int y){
 	case 'T':
 		glutPostRedisplay();
 		break;
-		
-	
 	//---------------------------- Observador
 	case 'o':
 		obsP[0] = 0;
@@ -350,7 +324,7 @@ int main(int argc, char** argv){
 	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
 	glutInitWindowSize (wScreen, hScreen);
 	glutInitWindowPosition (100, 100);
-	glutCreateWindow ("{pjmm,jpa}@dei.uc.pt-CG ::::::::::::::: (left,right,up,down, 'q', 't)' ");
+	glutCreateWindow ("CG Project");
 
 	init();
 
