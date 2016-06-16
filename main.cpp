@@ -75,6 +75,43 @@ GLuint  texture[4];
 RgbImage imag;
 
 
+//===================== Need to define lights =================//
+
+//Define luz ambiente
+GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0}; 
+
+//Localização do candeeiro
+GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
+
+//Define um "candeeiro"
+//Definição da luz "simples" / "branca";
+GLfloat luzCandeeirolCor[4]={0.1, 0.1, 0.1, 1.0}; 
+
+//Caracteristicas do candeeiro da atenuação atmosférica
+GLfloat candeeiroAttCon =1.0;
+GLfloat candeeiroAttLin =0.05;
+GLfloat candeeiroAttQua =0.0;
+
+GLint ligaLuz = 0;
+
+
+//==============Init lights================//
+
+void initLights(){
+	//Ambiente
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbienteCor);
+
+	//Candeeiro
+	glLightfv(GL_LIGHT0, GL_POSITION, candeeiroPos );
+	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor );
+	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
+	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
+	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
+
+
+}
+
+
 void criaDefineTexturas()
 {
 
@@ -134,6 +171,11 @@ void init(void)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
+	initLights();
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
 }
 
 
@@ -163,8 +205,16 @@ void drawPlayers(){
 			
 		glPopMatrix();
 	}
+}
+
+//======================================================================== ILUMINCCAO
+void iluminacao(){
 	
-	
+	if (ligaLuz)
+		glEnable(GL_LIGHT0);
+	else
+		glDisable(GL_LIGHT0);
+
 }
 
 void drawScene(){
@@ -305,6 +355,7 @@ void display(void){
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Apagar ]
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+	glEnable(GL_LIGHTING);
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Janela Visualizacao ]
 	glViewport (0,0,wScreen, hScreen);
 
@@ -324,8 +375,12 @@ void display(void){
 
 	criaDefineTexturas();
 
+	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Iluminuação]
+	iluminacao();
+
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Objectos ]
 	drawScene();
+
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Actualizacao
 	glutSwapBuffers();
@@ -363,6 +418,11 @@ void keyboard(unsigned char key, int x, int y){
 		obsP[2] = corner;
 
 		glutPostRedisplay();
+		break;
+
+	case 'l':
+		ligaLuz=!ligaLuz;
+		glutPostRedisplay();	
 		break;
 
 	//--------------------------- Escape
