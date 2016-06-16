@@ -16,6 +16,7 @@
 #endif
 
 #include "RgbImage.h"
+#include "materiais.h"
 
 
 //--------------------------------- Definir cores
@@ -53,7 +54,7 @@ GLfloat  angulo = 0.35*PI;
 
 //====== Coordenadas do observador e coordenadas para onde ele olha
 
-GLfloat  obsP[] = {0,3,0};
+GLfloat  obsP[] = {0,10.0,0};
 GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
 
 //=======
@@ -75,7 +76,13 @@ GLuint  texture[4];
 RgbImage imag;
 
 
-//===================== Need to define lights =================//
+//------------------------------------------------------------ Materiais
+GLfloat matAmbiente[] = {1.0,1.0,1.0,1.0};	  
+GLfloat matDifusa[]   = {1.0,1.0,1.0,1.0};	  
+GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0}; 
+
+
+//===================== Lights =================//
 
 //Define luz ambiente
 GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0}; 
@@ -161,15 +168,30 @@ void criaDefineTexturas()
 
 }
 
+void initMaterials()
+{
+	
+	glMaterialfv(GL_FRONT,GL_AMBIENT,  goldAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  goldDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
+
+}
 
 void init(void)
 {
 	glClearColor(BLACK);
 	glShadeModel(GL_SMOOTH);
-	
-	criaDefineTexturas();
+
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
+
+	criaDefineTexturas();
+	
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+
+	initMaterials();
 
 	initLights();
 
@@ -193,12 +215,19 @@ void drawPlayers(){
 	GLint i = 0;
 	GLfloat players[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
 
-	glColor4f(WHITE);
+	//glColor4f(WHITE);
 	
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+	
+				
+	initLights();
+	
+	initMaterials();
+
 	for (i = 0; i <= 3; i++)
 	{
 		glPushMatrix();
-
 			glTranslatef(players[i][0], players[i][1], players[i][2]);
 			glScalef(1.0,5.0,1.0);
 			glutSolidCube(3.0);
@@ -249,9 +278,9 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	//Draw Table Limits
-	glColor4f(BROWN);
 
+	//Draw Table Limits
+		
 	glPushMatrix();
 		glTranslatef(0,4.2,0);
 		glRotatef(90,1,0,0);
@@ -260,6 +289,10 @@ void drawScene(){
 		gluQuadricNormals   ( y, GLU_SMOOTH );
 		gluCylinder ( y, 7.5, 7.5, 0.5,150,150);
 	glPopMatrix();
+	
+
+
+	//==========================CAIXA MUNDO==================//
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
 	glEnable(GL_TEXTURE_2D);
@@ -347,6 +380,8 @@ void drawScene(){
 	//== Draw players
 	drawPlayers();
 
+	glutPostRedisplay();
+
 }
 
 
@@ -355,7 +390,9 @@ void display(void){
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Apagar ]
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
+	//≃================= Luzes
 	glEnable(GL_LIGHTING);
+
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Janela Visualizacao ]
 	glViewport (0,0,wScreen, hScreen);
 
