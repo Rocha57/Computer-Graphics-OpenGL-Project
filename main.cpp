@@ -78,6 +78,20 @@ RgbImage imag;
 void criaDefineTexturas()
 {
 
+	// Table TOP
+	glGenTextures(1, &texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile("tampo_mesa.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
 
 	//----------------------------------------- Chao y=0
 	glGenTextures(1, &texture[1]);
@@ -93,6 +107,7 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+
 	//----------------------------------------- Parede z=0
 	glGenTextures(1, &texture[2]);
 	glBindTexture(GL_TEXTURE_2D, texture[2]);
@@ -107,21 +122,6 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
-	// Table TOP
-	glGenTextures(1, &texture[0]);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("tampo_mesa.bmp");
-	glTexImage2D(GL_TEXTURE_2D, 0, 3,
-	imag.GetNumCols(),
-		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
-		imag.ImageData());
-
-	
 }
 
 
@@ -146,16 +146,37 @@ void resizeWindow(GLsizei w, GLsizei h)
 	glutPostRedisplay();
 }
 
+void drawPlayers(){
+
+	GLint i = 0;
+	GLfloat players[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
+
+	glColor4f(WHITE);
+	
+	for (i = 0; i <= 3; i++)
+	{
+		glPushMatrix();
+
+			glTranslatef(players[i][0], players[i][1], players[i][2]);
+			glScalef(1.0,5.0,1.0);
+			glutSolidCube(3.0);
+			
+		glPopMatrix();
+	}
+	
+	
+}
 
 void drawScene(){
 	//==============================================================
 	//== Desenha cenas e aplica as texturas necessárias
+	//== Tabela passou a ser desenhada com cilindros
 
 	//Draw Table Leg
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		glRotatef (90, -1, 0, 0);
-		//glutSolidCone(1,3.5,16,16);
+		
 		GLUquadricObj* quadobj1 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj1, GLU_FILL   );
 		gluQuadricNormals   ( quadobj1, GLU_SMOOTH );
@@ -166,11 +187,11 @@ void drawScene(){
 	glDisable(GL_TEXTURE_2D);
 
 	glEnable(GL_TEXTURE_2D);
+	
 	//Draw Table Top
 	glPushMatrix();
 		glTranslatef(0,4,0);
 		glRotatef(90,1,0,0);
-		/*glutSolidCone(7.5,0.5,100,100);*/
 		GLUquadricObj* quadobj2 = gluNewQuadric();
 		gluQuadricTexture(quadobj2, GL_TRUE);
 		glBindTexture(GL_TEXTURE_2D, texture[0] );
@@ -180,11 +201,7 @@ void drawScene(){
 
 	//Draw Table Limits
 	glColor4f(BROWN);
-	/*glPushMatrix();
-		glTranslatef(0,4.5,0);
-		glRotatef(90,1,0,0);
-		glutSolidTorus(3.75,3.8,100,100);
-	glPopMatrix();*/
+
 	glPushMatrix();
 		glTranslatef(0,4.2,0);
 		glRotatef(90,1,0,0);
@@ -193,6 +210,7 @@ void drawScene(){
 		gluQuadricNormals   ( y, GLU_SMOOTH );
 		gluCylinder ( y, 7.5, 7.5, 0.5,150,150);
 	glPopMatrix();
+
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
@@ -206,7 +224,6 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-	
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede z negativa
 	glEnable(GL_TEXTURE_2D);
@@ -277,7 +294,11 @@ void drawScene(){
 		glVertex3i( 0, 0,10);
 	glEnd();
 
+	//== Draw players
+	drawPlayers();
+
 }
+
 
 void display(void){
 
