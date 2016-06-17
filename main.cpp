@@ -463,7 +463,7 @@ void drawNegativeZ(){
 void drawPositiveZ(){
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
@@ -511,10 +511,10 @@ void drawMirror(){
 	glBindTexture(GL_TEXTURE_2D,texture[3]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner+3,  5, -corner+1);
-			glTexCoord2f(1.0f,0.0f); glVertex3i( corner-3, 5, -corner+1);
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner-3, 12, -corner+1);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner+3,  12,  -corner+1);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner+3,  5, -corner+0.8);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner-3, 5, -corner+0.8);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner-3, 12, -corner+0.8);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner+3,  12,  -corner+0.8);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -569,24 +569,24 @@ void drawScene(){
 	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
 
-	glPushMatrix();
+	/*glPushMatrix();
 		glScalef(1, 1, -1);
 		glTranslatef(0,0,-corner-1.5);
 		drawPlayers();
 
-	glPopMatrix();
+	glPopMatrix();*/
 	
 	glPushMatrix();
-		glTranslatef(0, 0, -corner-1.5);
+		glScalef(1,1,-1);
+		glTranslatef(0, 0, 2*corner-0.2);
 		drawPositiveZ();
-
 	glPopMatrix();
 
 	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
 	
     //Blending (para transparência)
 	glEnable(GL_BLEND);
-	glColor4f(1, 1, 1, 0.7);
+	//glColor4f(1, 1, 1, 0.7);
 	drawMirror();
 	glDisable(GL_BLEND);
 	
