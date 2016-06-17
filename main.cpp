@@ -169,6 +169,21 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+	//------------------------------------------ Mirror
+
+	glGenTextures(1, &texture[3]);
+	glBindTexture(GL_TEXTURE_2D, texture[3]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("mirror.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
 }
 
 void initMaterials(int material)
@@ -227,6 +242,8 @@ void init(void)
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
 
@@ -362,19 +379,18 @@ void drawChips(){
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
-void drawScene(){
-	//==============================================================
-	//== Desenha cenas e aplica as texturas necessárias
-	//== Tabela passou a ser desenhada com cilindros
 
-	drawChips();
+/**
+*	Adicionadas novas funções de draw, mais fácil para posteriormente serem feitas as reflexões
+**/
 
-	//Draw Table Leg
+//====== DESENHAR A MESA
+
+void drawTableLeg(){
 
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		glRotatef (90, -1, 0, 0);
-		
 		GLUquadricObj* quadobj1 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj1, GLU_FILL   );
 		gluQuadricNormals   ( quadobj1, GLU_SMOOTH );
@@ -384,9 +400,11 @@ void drawScene(){
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
+}
+
+void drawTableTop(){
+
 	glEnable(GL_TEXTURE_2D);
-	
-	//Draw Table Top
 	glPushMatrix();
 		glTranslatef(0,4,0);
 		glRotatef(90,1,0,0);
@@ -396,9 +414,9 @@ void drawScene(){
 		gluCylinder(quadobj2, 7.5, 0, 0.5, 100, 100);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
 
-
-	//Draw Table Limits
+void drawTableLimits(){
 
 	glColor4f(BROWN);
 	glPushMatrix();
@@ -409,12 +427,11 @@ void drawScene(){
 		gluQuadricNormals   ( y, GLU_SMOOTH );
 		gluCylinder ( y, 7.5, 7.5, 0.5,150,150);
 	glPopMatrix();
-	
+}
 
+//===== DESENHAR O "MUNDO"
+void drawFloor(){
 
-	//==========================CAIXA MUNDO==================//
-
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Chao y=0
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
@@ -426,9 +443,10 @@ void drawScene(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
 
+void drawNegativeZ(){
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Parede z negativa
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -440,8 +458,10 @@ void drawScene(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
 
-	//----------------------------------------------------- Parede z positiva
+void drawPositiveZ(){
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -453,8 +473,10 @@ void drawScene(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Parede x negativa
+void drawNegativeX(){
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -466,8 +488,10 @@ void drawScene(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
 
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Parede x positiva
+void drawPositiveX(){
+
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
@@ -479,11 +503,98 @@ void drawScene(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+}
+
+void drawMirror(){
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,texture[3]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner+3,  5, -corner+1);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner-3, 5, -corner+1);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner-3, 12, -corner+1);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner+3,  12,  -corner+1);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+}
+
+
+
+void drawScene(){
+	
+	//=== MESA
+
+	//Draw Table Leg
+	drawTableLeg();	
+	//Draw Table Top
+	drawTableTop();
+	//Draw Table Limits
+	drawTableLimits();
 	
 
+	//=== MUNDO
+	//y=0
+	drawFloor();
+	//z Negative
+	drawNegativeZ();
+	//z Positive
+	drawPositiveZ();
+	//x Negative
+	drawNegativeX();
+	//x Positive
+	drawPositiveX();
 
+	//== Draw players
+	drawPlayers();
+
+	//== Draw Chips
+	drawChips();
+
+	//=== DRAW REFLECTIONS
+	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
+	glColorMask(0, 0, 0, 0); //Nao escreve no color buffer
+	glDisable(GL_DEPTH_TEST); //Torna inactivo o teste de profundidade
+	glStencilFunc(GL_ALWAYS, 1, 1); //O
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); //
+	//Coloca a 1 todos os pixels no stencil buffer que representam o chão
+	
+	//=== MIRROR
+	drawMirror();
+
+	glColorMask(1, 1, 1, 1); //Activa a escrita de cor
+	glEnable(GL_DEPTH_TEST); //Activa o teste de profundidade
+	
+	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
+
+	glPushMatrix();
+		glScalef(1, 1, -1);
+		glTranslatef(0,0,-corner-1.5);
+		drawPlayers();
+
+	glPopMatrix();
+	
+	glPushMatrix();
+		glTranslatef(0, 0, -corner-1.5);
+		drawPositiveZ();
+
+	glPopMatrix();
+
+	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
+	
+    //Blending (para transparência)
+	glEnable(GL_BLEND);
+	glColor4f(1, 1, 1, 0.7);
+	drawMirror();
+	glDisable(GL_BLEND);
+	
+	//FIM REFLEXÃO
+	
+	
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	glColor4f(WHITE);
+	/*glColor4f(WHITE);
 	glBegin(GL_LINES);
 		glVertex3i( 0, 0, 0);
 		glVertex3i(10, 0, 0);
@@ -495,11 +606,11 @@ void drawScene(){
 	glBegin(GL_LINES);
 		glVertex3i( 0, 0, 0);
 		glVertex3i( 0, 0,10);
-	glEnd();
+	glEnd();*/
 
-	//== Draw players
-	drawPlayers();
 
+
+	glutSwapBuffers();
 	glutPostRedisplay();
 
 }
@@ -508,7 +619,7 @@ void drawScene(){
 void display(void){
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Apagar ]
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);	
 
 	//≃================= Luzes
 	glEnable(GL_LIGHTING);
@@ -614,7 +725,7 @@ void teclasNotAscii(int key, int x, int y){
 int main(int argc, char** argv){
 
 	glutInit(&argc, argv);
-	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH );
+	glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH | GLUT_STENCIL );
 	glutInitWindowSize (wScreen, hScreen);
 	glutInitWindowPosition (100, 100);
 	glutCreateWindow ("CG Project");
