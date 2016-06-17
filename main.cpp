@@ -1,5 +1,8 @@
 //COMPILE
+//LINUX
 //g++ main.cpp RgbImage.cpp -lGL -lglut -lGLU -o main
+//APPLE
+//g++ RgbImage.cpp main.cpp -framework OpenGL -framework GLUT -o main
 
 //For windows
 //#include <windows.h>
@@ -35,7 +38,7 @@
 //===========================================================Variaveis e constantes
 
 //------------------------------------------------------------ Sistema Coordenadas
-GLfloat   corner = 15.0;
+GLfloat   corner = 20.0;
 GLfloat   altura = 25.0;
 GLint     wScreen=800, hScreen=600;
 GLfloat   mesa=3.0;
@@ -125,7 +128,7 @@ void criaDefineTexturas()
 	// Table TOP
 	glGenTextures(1, &texture[0]);
 	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_BLEND);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -158,9 +161,9 @@ void criaDefineTexturas()
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("parede.bmp");
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile("1545.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -168,13 +171,40 @@ void criaDefineTexturas()
 
 }
 
-void initMaterials()
+void initMaterials(int material)
 {
-	
-	glMaterialfv(GL_FRONT,GL_AMBIENT,  goldAmb  );
+	switch(material){
+		case 1:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  redPlasticAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  redPlasticDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, redPlasticSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,redPlasticCoef);
+			break;
+		case 2:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  greenPlasticAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  greenPlasticDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, greenPlasticSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,greenPlasticCoef);
+			break;
+		case 3:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  cyanPlasticAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  cyanPlasticDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, cyanPlasticSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,cyanPlasticCoef);
+			break;
+		case 4:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  yellowPlasticAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  yellowPlasticDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, yellowPlasticSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,yellowPlasticCoef);
+			break;
+		case 5:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  goldAmb  );
 			glMaterialfv(GL_FRONT,GL_DIFFUSE,  goldDif );
 			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
 			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
+			break;
+	}
 
 }
 
@@ -191,7 +221,7 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
-	initMaterials();
+	initMaterials(5);
 
 	initLights();
 
@@ -217,23 +247,27 @@ void drawPlayers(){
 
 	//glColor4f(WHITE);
 	
+	//Usar Materiais
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 	
-				
 	initLights();
 	
-	initMaterials();
+	initMaterials(5);
 
 	for (i = 0; i <= 3; i++)
 	{
 		glPushMatrix();
 			glTranslatef(players[i][0], players[i][1], players[i][2]);
 			glScalef(1.0,5.0,1.0);
-			glutSolidCube(3.0);
+			glutSolidCube(2.0);
 			
 		glPopMatrix();
 	}
+
+	//Cancela Materiais
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
 //======================================================================== ILUMINCCAO
@@ -246,12 +280,82 @@ void iluminacao(){
 
 }
 
+void drawChips(){
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+	
+	initLights();
+	
+	initMaterials(1);
+	//glColor4f(VERMELHO);
+	glPushMatrix();
+		glTranslatef(-6.5,4.2,0.0);
+		glRotatef (90, -1, 0, 0);
+		GLUquadricObj* quadobj3 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj3, GLU_FILL   );
+		gluQuadricNormals   ( quadobj3, GLU_SMOOTH );
+		gluDisk(quadobj3, 0, 0.5, 100, 100);
+		GLUquadricObj* quadobj4 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj4, GLU_FILL   );
+		gluQuadricNormals   ( quadobj4, GLU_SMOOTH );
+		gluCylinder(quadobj4, 0.5, 0.5, 0.2, 100, 100);
+	glPopMatrix();
+	initMaterials(2);
+	//glColor4f(VERDE);
+	glPushMatrix();
+		glTranslatef(6.5,4.2,0.0);
+		glRotatef (90, -1, 0, 0);
+		GLUquadricObj* quadobj5 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj5, GLU_FILL   );
+		gluQuadricNormals   ( quadobj5, GLU_SMOOTH );
+		gluDisk(quadobj5, 0, 0.5, 100, 100);
+		GLUquadricObj* quadobj6 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj6, GLU_FILL   );
+		gluQuadricNormals   ( quadobj6, GLU_SMOOTH );
+		gluCylinder(quadobj6, 0.5, 0.5, 0.2, 100, 100);
+	glPopMatrix();
+	initMaterials(3);
+	//glColor4f(AZUL);
+	glPushMatrix();
+		glTranslatef(0.0,4.2,-6.5);
+		glRotatef (90, -1, 0, 0);
+		GLUquadricObj* quadobj7 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj7, GLU_FILL   );
+		gluQuadricNormals   ( quadobj7, GLU_SMOOTH );
+		gluDisk(quadobj7, 0, 0.5, 100, 100);
+		GLUquadricObj* quadobj8 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj8, GLU_FILL   );
+		gluQuadricNormals   ( quadobj8, GLU_SMOOTH );
+		gluCylinder(quadobj8, 0.5, 0.5, 0.2, 100, 100);
+	glPopMatrix();
+	initMaterials(4);
+	//glColor4f(AMARELO);
+	glPushMatrix();
+		glTranslatef(0.0,4.2,6.5);
+		glRotatef (90, -1, 0, 0);
+		GLUquadricObj* quadobj9 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj9, GLU_FILL   );
+		gluQuadricNormals   ( quadobj9, GLU_SMOOTH );
+		gluDisk(quadobj9, 0, 0.5, 100, 100);
+		GLUquadricObj* quadobj10 = gluNewQuadric();
+		gluQuadricDrawStyle ( quadobj10, GLU_FILL   );
+		gluQuadricNormals   ( quadobj10, GLU_SMOOTH );
+		gluCylinder(quadobj10, 0.5, 0.5, 0.2, 100, 100);
+	glPopMatrix();
+
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+}
+
 void drawScene(){
 	//==============================================================
 	//== Desenha cenas e aplica as texturas necessárias
 	//== Tabela passou a ser desenhada com cilindros
 
+	drawChips();
+
 	//Draw Table Leg
+
 	glEnable(GL_TEXTURE_2D);
 	glPushMatrix();
 		glRotatef (90, -1, 0, 0);
@@ -280,7 +384,8 @@ void drawScene(){
 
 
 	//Draw Table Limits
-		
+
+	glColor4f(BROWN);
 	glPushMatrix();
 		glTranslatef(0,4.2,0);
 		glRotatef(90,1,0,0);
