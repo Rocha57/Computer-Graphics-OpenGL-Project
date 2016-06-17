@@ -271,14 +271,23 @@ void drawPlayers(){
 }
 
 //======================================================================== ILUMINCCAO
+/**
+* Verifica se a luz está ligada ou não
+**/
 void iluminacao(){
 	
-	if (ligaLuz)
-		glEnable(GL_LIGHT0);
-	else
-		glDisable(GL_LIGHT0);
+	if (ligaLuz){
 
+		glEnable(GL_LIGHT0);
+		printf("Luz ligada: %d\n", ligaLuz);
+	}
+	else{
+
+		glDisable(GL_LIGHT0);
+		printf("Luz desligada: %d\n", ligaLuz);
+	}
 }
+
 
 void drawChips(){
 	glDisable(GL_COLOR_MATERIAL);
@@ -300,6 +309,8 @@ void drawChips(){
 		gluQuadricNormals   ( quadobj4, GLU_SMOOTH );
 		gluCylinder(quadobj4, 0.5, 0.5, 0.2, 100, 100);
 	glPopMatrix();
+
+
 	initMaterials(2);
 	//glColor4f(VERDE);
 	glPushMatrix();
@@ -314,6 +325,8 @@ void drawChips(){
 		gluQuadricNormals   ( quadobj6, GLU_SMOOTH );
 		gluCylinder(quadobj6, 0.5, 0.5, 0.2, 100, 100);
 	glPopMatrix();
+
+
 	initMaterials(3);
 	//glColor4f(AZUL);
 	glPushMatrix();
@@ -328,6 +341,8 @@ void drawChips(){
 		gluQuadricNormals   ( quadobj8, GLU_SMOOTH );
 		gluCylinder(quadobj8, 0.5, 0.5, 0.2, 100, 100);
 	glPopMatrix();
+
+
 	initMaterials(4);
 	//glColor4f(AMARELO);
 	glPushMatrix();
