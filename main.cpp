@@ -610,7 +610,7 @@ void drawScene(){
 
 
 
-	glutSwapBuffers();
+	
 	glutPostRedisplay();
 
 }
@@ -639,7 +639,6 @@ void display(void){
 	glLoadIdentity();
 
 	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
-	
 
 	criaDefineTexturas();
 
@@ -648,7 +647,6 @@ void display(void){
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Objectos ]
 	drawScene();
-
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Actualizacao
 	glutSwapBuffers();
