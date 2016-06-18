@@ -42,13 +42,6 @@
 GLfloat   corner = 20.0;
 GLfloat   altura = 25.0;
 GLint     wScreen=800, hScreen=600;
-GLfloat   mesa=3.0;
-GLfloat   bule=1.3;
-GLfloat   quad=6.0;
-GLfloat   mesaP[]= {4, 0, 10};
-GLfloat   buleP[]= {4, 0, 10};
-GLfloat   quadP[]= {4, 4, 1};
-
 
 //------------------------------------------------------------ Observador
 GLint    defineView=0;
@@ -119,7 +112,7 @@ void initLights(){
 
 	//Candeeiro
 	glLightfv(GL_LIGHT0, GL_POSITION, candeeiroPos );
-	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor );
+	glLightfv(GL_LIGHT0, GL_SPECULAR, luzCandeeirolCor );
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
@@ -295,6 +288,12 @@ void initMaterials(int material)
 			glMaterialfv(GL_FRONT,GL_DIFFUSE,  goldDif );
 			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
 			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
+			break;
+		case 6:
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  redRubberAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  redRubberDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, redRubberSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,redRubberCoef);
 			break;
 	}
 
@@ -633,8 +632,13 @@ void drawFloor(int height){
 
 void drawNegativeZ(){
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[1]);
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+
+	initMaterials(1);
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
@@ -643,13 +647,21 @@ void drawNegativeZ(){
 			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+
 }
 
 void drawPositiveZ(){
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[1]);
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+
+	initMaterials(2);
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
@@ -658,28 +670,47 @@ void drawPositiveZ(){
 			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
 void drawNegativeX(){
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+
+	initMaterials(3);
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, corner);
-			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, -corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, altura, -corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  corner);
+			/*glTexCoord2f(0.0f,0.0f); 
+			glTexCoord2f(1.0f,0.0f); 
+			glTexCoord2f(1.0f,1.0f); 
+			glTexCoord2f(0.0f,1.0f);*/ 
+			glVertex3i( -corner,  0, corner);
+			glVertex3i( -corner, 0, -corner );
+			glVertex3i( -corner, altura, -corner);
+			glVertex3i( -corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+
 }
 
 void drawPositiveX(){
 
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+
+	initMaterials(4);
+
+	//glEnable(GL_TEXTURE_2D);
+	//glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
@@ -688,7 +719,9 @@ void drawPositiveX(){
 			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
 void drawMirror(){
