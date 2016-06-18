@@ -77,6 +77,7 @@ GLint    msec=100;					//.. definicao do timer (actualizacao)
 
 //------------------------------------------------------------ Texturas
 GLuint  texture[6];
+GLuint  cards[13];
 RgbImage imag;
 
 
@@ -164,7 +165,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("parede.bmp");
+	imag.LoadBmpFile("ceiling.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -194,7 +195,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("floor.bmp");
+	imag.LoadBmpFile("ceiling.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -215,7 +216,20 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+	glGenTextures(1, &cards[0]);
+	glBindTexture(GL_TEXTURE_2D, cards[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("2hearts1.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
 }
+
 
 void initMaterials(int material)
 {
@@ -412,6 +426,22 @@ void drawChips(){
 	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
+void drawCards(){
+
+	//Ace of spades
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.5, 5, 0.5 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f( 0.5, 5, 0.5 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f( 0.5, 5, -0.5);
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.5,  5,  -0.5);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+}
+
 
 /**
 *	Adicionadas novas funções de draw, mais fácil para posteriormente serem feitas as reflexões
@@ -484,7 +514,7 @@ void drawFloor(int height){
 void drawNegativeZ(){
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[2]);
+	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
@@ -600,7 +630,6 @@ void drawScene(){
 	drawFloor(0);
 	drawFloor(altura);
 	//z Negative
-	drawNegativeZ();
 	//z Positive
 	drawPositiveZ();
 	//x Negative
@@ -613,7 +642,7 @@ void drawScene(){
 
 	//== Draw Chips
 	drawChips();
-	drawBoxTeaPot();
+	drawCards();
 
 	//=== DRAW REFLECTIONS
 	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
@@ -632,17 +661,21 @@ void drawScene(){
 	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
 
-	/*glPushMatrix();
-		glScalef(1.0,1.0,-1.0);
-		glTranslatef(0,0, corner);
-		drawPlayers();
-	glPopMatrix();*/
-
+	//Desenha Objectos reflectidos
 	glPushMatrix();
 		glScalef(1,1,-1);
 		glTranslatef(0, 0, corner);
+		drawPlayers();
 		drawPositiveZ();
+		drawPositiveX();
+		drawNegativeX();
+		drawFloor(0);
+		drawTableTop();
+		drawTableLeg();
+		drawTableLimits();
+		drawChips();
 	glPopMatrix();
+
 	
 	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
 	
@@ -653,18 +686,26 @@ void drawScene(){
 	glDisable(GL_BLEND);
 	
 	//FIM REFLEXÃO
+
+	drawNegativeZ();
+	drawBoxTeaPot();
 	
 	
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	/*glColor4f(WHITE);
+	//XX
+	/*glColor4f(LARANJA);
 	glBegin(GL_LINES);
 		glVertex3i( 0, 0, 0);
 		glVertex3i(10, 0, 0);
 	glEnd();
+	//YY
+	glColor4f(BLACK);
 	glBegin(GL_LINES);
 		glVertex3i(0,  0, 0);
 		glVertex3i(0, 10, 0);
 	glEnd();
+	//ZZ
+	glColor4f(WHITE);
 	glBegin(GL_LINES);
 		glVertex3i( 0, 0, 0);
 		glVertex3i( 0, 0,10);
@@ -673,7 +714,7 @@ void drawScene(){
 	
 	glutPostRedisplay();
 
-	glutSwapBuffers();
+	//glutSwapBuffers();
 
 }
 
@@ -694,7 +735,7 @@ void display(void){
 	glLoadIdentity();
 
 	//GluPerspective vai ser tridimensional
-	gluPerspective(88.0, wScreen/hScreen, 0.1, 3*corner); 
+	gluPerspective(88.0, wScreen/hScreen, 0.1, 6*corner); 
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
@@ -703,6 +744,7 @@ void display(void){
 	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
 
 	criaDefineTexturas();
+	//criaDefineCartas();
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ [Iluminuação]
 	iluminacao();
@@ -737,14 +779,38 @@ void keyboard(unsigned char key, int x, int y){
 	case 'o':
 		obsP[0] = 0;
 		obsP[1] = 3;
+		obsP[2] = corner;
+		glutPostRedisplay();
+		break;
+	//Tecla 1 - Perspectiva do jogador Verde
+	case 49:
+		obsP[0] = 7;
+		obsP[1] = 10;
 		obsP[2] = 0;
 		glutPostRedisplay();
 		break;
-	case 49:
-		obsP[0] = 0;
-		obsP[1] = 3;
-		obsP[2] = corner;
 
+	//Tecla 2 - Perspectiva do jogador Amarelo
+	case 50:
+		obsP[0] = 0;
+		obsP[1] = 10;
+		obsP[2] = 7;
+		glutPostRedisplay();
+		break;
+
+	//Tecla 3 - Perspectiva do jogador Vermelho
+	case 51:
+		obsP[0] = -7;
+		obsP[1] = 10;
+		obsP[2] = 0;
+		glutPostRedisplay();
+		break;
+	
+	//Tecla 4 - Perspectiva do jogador Azul
+	case 52:
+		obsP[0] = 0;
+		obsP[1] = 10;
+		obsP[2] = -7;
 		glutPostRedisplay();
 		break;
 
