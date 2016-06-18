@@ -53,17 +53,18 @@ GLfloat   quadP[]= {4, 4, 1};
 //------------------------------------------------------------ Observador
 GLint    defineView=0;
 GLint    defineProj=1;
-GLfloat  raio   = 1;
+GLfloat  raio   = corner;
 GLfloat  angulo = 0.35*PI;
 
 //====== Coordenadas do observador e coordenadas para onde ele olha
 
-GLfloat  obsP[] = {0,10.0,0};
+GLfloat  obsP[] = {0,corner,0};
 GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+//GLfloat	 olharPara[] = {0, 3, 0};
 
 //=======
 GLfloat  incy   = 0.5;
-GLfloat  inca   = 0.03;
+GLfloat  incrementaAngulo   = 0.03;
 GLfloat  angBule = 0;
 GLfloat  incBule = 10;
 
@@ -106,8 +107,9 @@ GLfloat candeeiroAttCon =1.0;
 GLfloat candeeiroAttLin =0.05;
 GLfloat candeeiroAttQua =0.0;
 
+//Just some flags
 GLint ligaLuz = 0;
-
+GLint treeSixty = 0;
 
 //==============Init lights================//
 
@@ -121,7 +123,6 @@ void initLights(){
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
-
 
 }
 
@@ -716,6 +717,7 @@ void drawBoxTeaPot(){
 		//glTranslatef(-corner+3,1.2,-corner+3);
 		glTranslatef(0,5,0);
 		glRotatef(-30,0,1,0);
+		glRotatef(angBule, 0, 1, 0);
 		glutSolidTeapot(1.5);
 	glPopMatrix();
 
@@ -853,16 +855,19 @@ void display(void){
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Projeccao]
 	glMatrixMode(GL_PROJECTION);
+
 	glLoadIdentity();
 
 	//GluPerspective vai ser tridimensional
-	gluPerspective(88.0, wScreen/hScreen, 0.1, 6*corner); 
+	//Muda projecção:
+
+	gluPerspective(88.0, wScreen/hScreen, 0.1, 6*corner); 		
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 2, 0);
+	gluLookAt(obsP[0], obsP[1], obsP[2], olharPara[0],olharPara[1],olharPara[2], 0, 1, 0);
 
 	criaDefineTexturas();
 	//criaDefineCartas();
@@ -891,9 +896,14 @@ void keyboard(unsigned char key, int x, int y){
 
 	switch (key) {
 
-	//--------------------------- Textura no papel de parede
-	case 't':
-	case 'T':
+	case 'p':
+		obsP[0] = raio*cos(angulo);
+    	obsP[1] = corner; 
+		obsP[2] = raio*sin(angulo);
+		olharPara[0] = 0;
+		olharPara[1] = 6;
+		olharPara[2] = 0;
+		treeSixty = 1;
 		glutPostRedisplay();
 		break;
 	//---------------------------- Observador
@@ -901,13 +911,20 @@ void keyboard(unsigned char key, int x, int y){
 		obsP[0] = 0;
 		obsP[1] = 3;
 		obsP[2] = corner;
+		treeSixty = 1;
+
 		glutPostRedisplay();
 		break;
 	//Tecla 1 - Perspectiva do jogador Verde
 	case 49:
-		obsP[0] = 7;
+		obsP[0] = 8;
 		obsP[1] = 10;
 		obsP[2] = 0;
+		olharPara[0] = 2;
+		olharPara[1] = 6;
+		olharPara[2] = 0;
+		treeSixty = 0;
+
 		glutPostRedisplay();
 		break;
 
@@ -915,15 +932,25 @@ void keyboard(unsigned char key, int x, int y){
 	case 50:
 		obsP[0] = 0;
 		obsP[1] = 10;
-		obsP[2] = 7;
+		obsP[2] = 8;
+		olharPara[0] = 0;
+		olharPara[1] = 6;
+		olharPara[2] = 2;
+		treeSixty = 0;
+
 		glutPostRedisplay();
 		break;
 
 	//Tecla 3 - Perspectiva do jogador Vermelho
 	case 51:
-		obsP[0] = -7;
+		obsP[0] = -8;
 		obsP[1] = 10;
 		obsP[2] = 0;
+		olharPara[0] = -2;
+		olharPara[1] = 6;
+		olharPara[2] = 0;
+		treeSixty = 0;
+
 		glutPostRedisplay();
 		break;
 	
@@ -931,7 +958,12 @@ void keyboard(unsigned char key, int x, int y){
 	case 52:
 		obsP[0] = 0;
 		obsP[1] = 10;
-		obsP[2] = -7;
+		obsP[2] = -8;
+		olharPara[0] = 0;
+		olharPara[1] = 6;
+		olharPara[2] = -2;
+		treeSixty = 0;
+
 		glutPostRedisplay();
 		break;
 
@@ -951,20 +983,23 @@ void keyboard(unsigned char key, int x, int y){
 void teclasNotAscii(int key, int x, int y){
     if(key == GLUT_KEY_UP)
 		obsP[1]=obsP[1]+incy;
-		if(key == GLUT_KEY_DOWN)
+	if(key == GLUT_KEY_DOWN)
 		obsP[1]=obsP[1]-incy;
-	if(key == GLUT_KEY_LEFT)
-		angulo = angulo+inca;
-	if(key == GLUT_KEY_RIGHT)
-		angulo = angulo-inca;
 
-		olharPara[0] = cos(angulo);
-		
-		olharPara[2] = sin(angulo);
-//=======
-    	olharPara[0] = raio*cos(angulo);
-		olharPara[2] = raio*sin(angulo);
+	if (treeSixty)
+	{
+		if(key == GLUT_KEY_LEFT){
+		angulo = angulo + incrementaAngulo;
+		}
+		if(key == GLUT_KEY_RIGHT){
+			angulo = angulo - incrementaAngulo;
+		}
 
+		obsP[0] = raio*cos(angulo);
+    	obsP[1] = corner; 
+		obsP[2] = raio*sin(angulo);
+	}
+	
 
 	glutPostRedisplay();
 }
