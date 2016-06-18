@@ -76,7 +76,7 @@ GLint    msec=100;					//.. definicao do timer (actualizacao)
 
 
 //------------------------------------------------------------ Texturas
-GLuint  texture[4];
+GLuint  texture[6];
 RgbImage imag;
 
 
@@ -141,7 +141,7 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 
-	//----------------------------------------- Chao y=0
+	//----------------------------------------- Perna da Mesa
 	glGenTextures(1, &texture[1]);
 	glBindTexture(GL_TEXTURE_2D, texture[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -149,7 +149,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("chao.bmp");
+	imag.LoadBmpFile("leg.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -164,7 +164,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("1545.bmp");
+	imag.LoadBmpFile("parede.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -180,6 +180,36 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	imag.LoadBmpFile("mirror.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//------------------------------------------ Chao
+
+	glGenTextures(1, &texture[4]);
+	glBindTexture(GL_TEXTURE_2D, texture[4]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile("floor.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//------------------------------------------ Tecto
+
+	glGenTextures(1, &texture[5]);
+	glBindTexture(GL_TEXTURE_2D, texture[5]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	imag.LoadBmpFile("ceiling.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -436,7 +466,10 @@ void drawTableLimits(){
 void drawFloor(int height){
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,texture[1]);
+	if (height == 0)
+		glBindTexture(GL_TEXTURE_2D,texture[4]);
+	else
+		glBindTexture(GL_TEXTURE_2D,texture[5]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
 			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  height, -corner );
