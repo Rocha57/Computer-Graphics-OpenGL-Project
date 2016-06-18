@@ -77,8 +77,10 @@ GLint    msec=100;					//.. definicao do timer (actualizacao)
 
 //------------------------------------------------------------ Texturas
 GLuint  texture[6];
-GLuint  cards[13];
 RgbImage imag;
+
+GLuint tuxedoTextures[5];
+GLuint  cards[13];
 
 
 //------------------------------------------------------------ Materiais
@@ -135,7 +137,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("tampo_mesa.bmp");
+	imag.LoadBmpFile("room/tampo_mesa.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -150,7 +152,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("tampo_mesa.bmp");
+	imag.LoadBmpFile("room/leg.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -165,7 +167,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("ceiling.bmp");
+	imag.LoadBmpFile("room/ceiling.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -180,7 +182,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("mirror.bmp");
+	imag.LoadBmpFile("room/mirror.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -195,7 +197,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("ceiling.bmp");
+	imag.LoadBmpFile("room/floor.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -210,7 +212,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("ceiling.bmp");
+	imag.LoadBmpFile("room/ceiling.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -224,6 +226,35 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 	imag.LoadBmpFile("2hearts1.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//------------------------------------------- FATO
+	//--- Front
+
+	glGenTextures(1, &tuxedoTextures[0]);
+	glBindTexture(GL_TEXTURE_2D, tuxedoTextures[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	glGenTextures(1, &tuxedoTextures[1]);
+	glBindTexture(GL_TEXTURE_2D, tuxedoTextures[1]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/HEAD_FRONT.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -305,9 +336,96 @@ void resizeWindow(GLsizei w, GLsizei h)
 	glutPostRedisplay();
 }
 
+//== Draw players one by one
+
+void drawPlayer1(){
+
+	glColor4f(BROWN);
+	//Draw front body
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedoTextures[0]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(9.0, 0.0, -1.8);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(9.0, 0.0, 1.8);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(9.0, 10.0, 1.8);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(9.0, 10.0, -1.8);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+
+	//Draw back body
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 0.0, -1.8);
+		glVertex3f(10, 0.0, 1.8);
+		glVertex3f(10.0, 10.0, 1.8);
+		glVertex3f(10.0, 10.0, -1.8);
+	glEnd();
+
+	//Draw sides
+
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 0.0, -1.8);
+		glVertex3f(9.0, 0.0, -1.8);
+		glVertex3f(9.0, 10.0, -1.8);
+		glVertex3f(10.0, 10.0, -1.8);
+	glEnd();
+
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 0.0, 1.8);
+		glVertex3f(9.0, 0.0, 1.8);
+		glVertex3f(9.0, 10.0, 1.8);
+		glVertex3f(10.0, 10.0, 1.8);
+	glEnd();
+
+	// Draw front Head
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedoTextures[1]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(9.0, 10.0, -1.0);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(9.0, 10.0, 1.0);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(9.0, 12.0, 1.0);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(9.0, 12.0, -1.0);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+
+	// Draw back Head
+
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 10.0, -1.0);
+		glVertex3f(10.0, 10.0, 1.0);
+		glVertex3f(10.0, 12.0, 1.0);
+		glVertex3f(10.0, 12.0, -1.0);
+	glEnd();
+
+	// Draw head sides
+
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 10.0, -1.0);
+		glVertex3f(9.0, 10.0, -1.0);
+		glVertex3f(9.0, 12.0, -1.0);
+		glVertex3f(10.0, 12.0, -1.0);
+	glEnd();
+
+	glBegin(GL_QUADS);
+		glVertex3f(10.0, 10.0, 1.0);
+		glVertex3f(9.0, 10.0, 1.0);
+		glVertex3f(9.0, 12.0, 1.0);
+		glVertex3f(10.0, 12.0, 1.0);
+	glEnd();
+
+	// Draw top head
+
+}
+
 void drawPlayers(){
 
-	GLint i = 0;
+	/*GLint i = 0;
 	GLfloat players[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
 
 	//glColor4f(WHITE);
@@ -331,7 +449,8 @@ void drawPlayers(){
 
 	//Cancela Materiais
 	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );*/
+	drawPlayer1();
 }
 
 //======================================================================== ILUMINCCAO
@@ -594,7 +713,8 @@ void drawBoxTeaPot(){
 	initMaterials(5);
 
 	glPushMatrix();
-		glTranslatef(-corner+3,1.2,-corner+3);
+		//glTranslatef(-corner+3,1.2,-corner+3);
+		glTranslatef(0,5,0);
 		glRotatef(-30,0,1,0);
 		glutSolidTeapot(1.5);
 	glPopMatrix();
@@ -604,7 +724,8 @@ void drawBoxTeaPot(){
 
 	glEnable(GL_BLEND);
 	glPushMatrix();
-		glTranslatef(-corner+3,1.75,-corner+3);
+		//glTranslatef(-corner+3,1.75,-corner+3);
+		glTranslatef(0,6,0);
 		glColor4f(WHITE_T);
 		glutSolidCube(4.2);
 	glPopMatrix();
@@ -814,6 +935,7 @@ void keyboard(unsigned char key, int x, int y){
 		glutPostRedisplay();
 		break;
 
+	//Liga luzes
 	case 'l':
 		ligaLuz=!ligaLuz;
 		glutPostRedisplay();	
