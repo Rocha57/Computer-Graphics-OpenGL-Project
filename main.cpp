@@ -29,6 +29,7 @@
 #define VERDE    0.0, 1.0, 0.0, 1.0
 #define LARANJA  1.0, 0.5, 0.1, 1.0
 #define WHITE    1.0, 1.0, 1.0, 1.0
+#define WHITE_T  1.0, 1.0, 1.0, 0.5
 #define BLACK    0.0, 0.0, 0.0, 1.0
 #define GRAY     0.9, 0.92, 0.29, 1.0
 #define BROWN    0.545098, 0.270588, 0.0745098, 1.0
@@ -231,6 +232,9 @@ void init(void)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_DEPTH_TEST);
 
+	//Definir funcao de blending
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA); //cor_final = alpha_nova*cor_nova + (1-alpha_nova)*cor_existente
+
 	criaDefineTexturas();
 	
 	glEnable(GL_COLOR_MATERIAL);
@@ -278,7 +282,6 @@ void drawPlayers(){
 			glTranslatef(players[i][0], players[i][1], players[i][2]);
 			glScalef(1.0,5.0,1.0);
 			glutSolidCube(2.0);
-			
 		glPopMatrix();
 	}
 
@@ -296,26 +299,26 @@ void iluminacao(){
 	if (ligaLuz){
 
 		glEnable(GL_LIGHT0);
-		printf("Luz ligada: %d\n", ligaLuz);
+		//printf("Luz ligada: %d\n", ligaLuz);
 	}
 	else{
 
 		glDisable(GL_LIGHT0);
-		printf("Luz desligada: %d\n", ligaLuz);
+		//printf("Luz desligada: %d\n", ligaLuz);
 	}
 }
 
 
 void drawChips(){
-	glDisable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHTING);
+	//glDisable(GL_COLOR_MATERIAL);
+	//glEnable(GL_LIGHTING);
 	
 	initLights();
 	
-	initMaterials(1);
-	//glColor4f(VERMELHO);
+	//initMaterials(1);
+	glColor4f(VERMELHO);
 	glPushMatrix();
-		glTranslatef(-6.5,4.2,0.0);
+		glTranslatef(-6.5,4.05,0.0);
 		glRotatef (90, -1, 0, 0);
 		GLUquadricObj* quadobj3 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj3, GLU_FILL   );
@@ -328,10 +331,10 @@ void drawChips(){
 	glPopMatrix();
 
 
-	initMaterials(2);
-	//glColor4f(VERDE);
+	//initMaterials(2);
+	glColor4f(VERDE);
 	glPushMatrix();
-		glTranslatef(6.5,4.2,0.0);
+		glTranslatef(6.5,4.05,0.0);
 		glRotatef (90, -1, 0, 0);
 		GLUquadricObj* quadobj5 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj5, GLU_FILL   );
@@ -344,10 +347,10 @@ void drawChips(){
 	glPopMatrix();
 
 
-	initMaterials(3);
-	//glColor4f(AZUL);
+	//initMaterials(3);
+	glColor4f(AZUL);
 	glPushMatrix();
-		glTranslatef(0.0,4.2,-6.5);
+		glTranslatef(0.0,4.05,-6.5);
 		glRotatef (90, -1, 0, 0);
 		GLUquadricObj* quadobj7 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj7, GLU_FILL   );
@@ -360,10 +363,10 @@ void drawChips(){
 	glPopMatrix();
 
 
-	initMaterials(4);
-	//glColor4f(AMARELO);
+	//initMaterials(4);
+	glColor4f(AMARELO);
 	glPushMatrix();
-		glTranslatef(0.0,4.2,6.5);
+		glTranslatef(0.0,4.05,6.5);
 		glRotatef (90, -1, 0, 0);
 		GLUquadricObj* quadobj9 = gluNewQuadric();
 		gluQuadricDrawStyle ( quadobj9, GLU_FILL   );
@@ -375,8 +378,8 @@ void drawChips(){
 		gluCylinder(quadobj10, 0.5, 0.5, 0.2, 100, 100);
 	glPopMatrix();
 
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	//glEnable(GL_COLOR_MATERIAL);
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
 
@@ -430,16 +433,16 @@ void drawTableLimits(){
 }
 
 //===== DESENHAR O "MUNDO"
-void drawFloor(){
+void drawFloor(int height){
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, 0, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  0,  corner);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  height, -corner );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, height, -corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, height, corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  height,  corner);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -520,6 +523,31 @@ void drawMirror(){
 	glDisable(GL_TEXTURE_2D);
 }
 
+void drawBoxTeaPot(){
+
+	glDisable(GL_COLOR_MATERIAL);
+	glEnable(GL_LIGHTING);
+
+	initMaterials(5);
+
+	glPushMatrix();
+		glTranslatef(-corner+3,1.2,-corner+3);
+		glRotatef(-30,0,1,0);
+		glutSolidTeapot(1.5);
+	glPopMatrix();
+
+	glEnable(GL_COLOR_MATERIAL);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+
+	glEnable(GL_BLEND);
+	glPushMatrix();
+		glTranslatef(-corner+3,1.75,-corner+3);
+		glColor4f(WHITE_T);
+		glutSolidCube(4.2);
+	glPopMatrix();
+	glDisable(GL_BLEND);
+}
+
 
 
 void drawScene(){
@@ -536,7 +564,8 @@ void drawScene(){
 
 	//=== MUNDO
 	//y=0
-	drawFloor();
+	drawFloor(0);
+	drawFloor(altura);
 	//z Negative
 	drawNegativeZ();
 	//z Positive
@@ -547,10 +576,11 @@ void drawScene(){
 	drawPositiveX();
 
 	//== Draw players
-	drawPlayers();
+	//drawPlayers();
 
 	//== Draw Chips
 	drawChips();
+	drawBoxTeaPot();
 
 	//=== DRAW REFLECTIONS
 	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
@@ -569,16 +599,15 @@ void drawScene(){
 	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
 
-	/*glPushMatrix();
-		glScalef(1, 1, -1);
+	glPushMatrix();
 		glTranslatef(0,0,-corner-1.5);
 		drawPlayers();
 
-	glPopMatrix();*/
+	glPopMatrix();
 	
 	glPushMatrix();
 		glScalef(1,1,-1);
-		glTranslatef(0, 0, 2*corner-0.2);
+		glTranslatef(0, 0, 2*corner-1.2);
 		drawPositiveZ();
 	glPopMatrix();
 
@@ -607,8 +636,6 @@ void drawScene(){
 		glVertex3i( 0, 0, 0);
 		glVertex3i( 0, 0,10);
 	glEnd();*/
-
-
 
 	
 	glutPostRedisplay();
