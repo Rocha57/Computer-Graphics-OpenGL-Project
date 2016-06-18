@@ -90,10 +90,15 @@ GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0};
 
 //Localização do candeeiro
 GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
+GLfloat lightsPos[4][4] = {{-corner,0,-corner,1.0},
+							{-corner,0,corner,1.0},
+							{corner,0,-corner,1.0},
+							{corner,0,corner,1.0}};
 
 //Define um "candeeiro"
 //Definição da luz "simples" / "branca";
-GLfloat luzCandeeirolCor[4]={0.1, 0.1, 0.1, 1.0}; 
+GLfloat luzCandeeirolCor[4]={0.1, 0.1, 0.1, 1.0};
+GLfloat lightsLuzes[4][4] = {{AZUL}, {AMARELO},{VERMELHO}, {VERDE}}; 
 
 //Caracteristicas do candeeiro da atenuação atmosférica
 GLfloat candeeiroAttCon =1.0;
@@ -103,6 +108,7 @@ GLfloat candeeiroAttQua =0.0;
 //Just some flags
 GLint ligaLuz = 0;
 GLint treeSixty = 0;
+GLint ligaFocos = 0;
 
 //==============Init lights================//
 
@@ -116,6 +122,13 @@ void initLights(){
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
+
+	//CORNER LIGHTS
+	glLightfv(GL_LIGHT1, GL_POSITION, lightsPos[0]);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, lightsLuzes[0] );
+	glLightf (GL_LIGHT1, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
+	glLightf (GL_LIGHT1, GL_LINEAR_ATTENUATION, candeeiroAttLin);
+	glLightf (GL_LIGHT1, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
 
 }
 
@@ -225,6 +238,19 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+	glGenTextures(1, &cards[1]);
+	glBindTexture(GL_TEXTURE_2D, cards[1]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("card_back.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
 	//------------------------------------------- FATO
 	//--- Front
 
@@ -321,6 +347,7 @@ void init(void)
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -469,6 +496,14 @@ void iluminacao(){
 		glDisable(GL_LIGHT0);
 		//printf("Luz desligada: %d\n", ligaLuz);
 	}
+	if (ligaFocos){
+		glEnable(GL_LIGHT1);
+		printf("foco ligado\n");
+	}
+	else{
+		glDisable(GL_LIGHT1);
+		printf("foco desligado\n");
+	}
 }
 
 
@@ -547,18 +582,36 @@ void drawChips(){
 
 void drawCards(){
 
-	//Ace of spades
+	//2 of Hearts Front Card
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,cards[0]);
 	glPushMatrix();
+		glTranslatef(-1.8,0,0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.5, 5, 0.5 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f( 0.5, 5, 0.5 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f( 0.5, 5, -0.5);
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.5,  5,  -0.5);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+	//Hearthstone Back Card
+	glCullFace(GL_FRONT);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(-1.8,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
 }
 
 
@@ -749,7 +802,6 @@ void drawBoxTeaPot(){
 	glPushMatrix();
 		//glTranslatef(-corner+3,1.2,-corner+3);
 		glTranslatef(0,5,0);
-		glRotatef(-30,0,1,0);
 		glRotatef(angBule, 0, 1, 0);
 		glutSolidTeapot(1.5);
 	glPopMatrix();
@@ -762,7 +814,7 @@ void drawBoxTeaPot(){
 		//glTranslatef(-corner+3,1.75,-corner+3);
 		glTranslatef(0,6,0);
 		glColor4f(WHITE_T);
-		glutSolidCube(4.2);
+		glutSolidCube(4.5);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
@@ -830,6 +882,7 @@ void drawScene(){
 		drawTableLeg();
 		drawTableLimits();
 		drawChips();
+		drawBoxTeaPot();
 	glPopMatrix();
 
 	
@@ -1004,6 +1057,10 @@ void keyboard(unsigned char key, int x, int y){
 	case 'l':
 		ligaLuz=!ligaLuz;
 		glutPostRedisplay();	
+		break;
+	case 'f':
+		ligaFocos=!ligaFocos;
+		glutPostRedisplay();
 		break;
 
 	//--------------------------- Escape
