@@ -149,7 +149,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	imag.LoadBmpFile("leg.bmp");
+	imag.LoadBmpFile("tampo_mesa.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -547,10 +547,10 @@ void drawMirror(){
 	glBindTexture(GL_TEXTURE_2D,texture[3]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner+3,  5, -corner+0.8);
-			glTexCoord2f(1.0f,0.0f); glVertex3i( corner-3, 5, -corner+0.8);
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner-3, 12, -corner+0.8);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner+3,  12,  -corner+0.8);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner+3,  5, -corner+1.2);
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner-3, 5, -corner+1.2);
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner-3, 12, -corner+1.2);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner+3,  12,  -corner+1.2);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -609,7 +609,7 @@ void drawScene(){
 	drawPositiveX();
 
 	//== Draw players
-	//drawPlayers();
+	drawPlayers();
 
 	//== Draw Chips
 	drawChips();
@@ -632,24 +632,24 @@ void drawScene(){
 	glStencilFunc(GL_EQUAL, 1, 1);//O stencil test passa apenas quando o pixel tem o valor 1 no stencil buffer
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Stencil buffer read-only
 
-	glPushMatrix();
-		glTranslatef(0,0,-corner-1.5);
+	/*glPushMatrix();
+		glScalef(1.0,1.0,-1.0);
+		glTranslatef(0,0, corner);
 		drawPlayers();
+	glPopMatrix();*/
 
-	glPopMatrix();
-	
 	glPushMatrix();
 		glScalef(1,1,-1);
-		glTranslatef(0, 0, 2*corner-1.2);
+		glTranslatef(0, 0, corner);
 		drawPositiveZ();
 	glPopMatrix();
-
+	
 	glDisable(GL_STENCIL_TEST); //Desactiva a utilização do stencil buffer
 	
     //Blending (para transparência)
 	glEnable(GL_BLEND);
-	//glColor4f(1, 1, 1, 0.7);
-	drawMirror();
+	glColor4f(1, 1, 1, 0.7);
+		drawMirror();
 	glDisable(GL_BLEND);
 	
 	//FIM REFLEXÃO
@@ -672,6 +672,8 @@ void drawScene(){
 
 	
 	glutPostRedisplay();
+
+	glutSwapBuffers();
 
 }
 
