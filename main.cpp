@@ -354,7 +354,7 @@ void initMaterials(int material)
 			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
 			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
 			break;
-		case 6: //whitePlastic
+		case 6: //yellowPlastic
 			glMaterialfv(GL_FRONT,GL_AMBIENT,  whitePlasticAmb  );
 			glMaterialfv(GL_FRONT,GL_DIFFUSE,  whitePlasticDif );
 			glMaterialfv(GL_FRONT,GL_SPECULAR, whitePlasticSpec);
@@ -544,14 +544,14 @@ void iluminacao(){
 		glEnable(GL_LIGHT2);
 		glEnable(GL_LIGHT3);
 		glEnable(GL_LIGHT4);
-		//printf("foco ligado\n");
+		printf("foco ligado\n");
 	}
 	else{
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHT2);
 		glDisable(GL_LIGHT3);
 		glDisable(GL_LIGHT4);
-		//printf("foco desligado\n");
+		printf("foco desligado\n");
 	}
 
 	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
@@ -641,257 +641,8 @@ void drawChips(){
 	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
-void drawHandCards(){
-	//-----------------------------------------PLAYER 1
+void drawCards(){
 
-	//LEFT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0,0,0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0,0,0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	//RIGHT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0,0,-0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0,0,-0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
-
-	//----------------------------------------------PLAYER 2
-
-	//LEFT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5, 7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5, 7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	//RIGHT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(-0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(-0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
-
-	//-----------------------------------------PLAYER 3
-
-	//LEFT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0,0,0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0,0,0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	//RIGHT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0,0,-0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0,0,-0.3);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
-
-	//----------------------------------------------PLAYER 4
-
-	//LEFT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5, -7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5, -7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	//RIGHT HAND CARD
-	glCullFace(GL_BACK);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[0]);
-	glPushMatrix();
-		glTranslatef(-0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glCullFace(GL_FRONT);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(-0.3,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_CULL_FACE);
-}
-
-void drawTableCards(){
 	//2 of Hearts Front Card
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -900,10 +651,10 @@ void drawTableCards(){
 	glPushMatrix();
 		glTranslatef(-1.8,0,0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -914,66 +665,14 @@ void drawTableCards(){
 	glPushMatrix();
 		glTranslatef(-1.8,0,0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(-1,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(-0.2,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(0.6,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
-
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,cards[1]);
-	glPushMatrix();
-		glTranslatef(1.4,0,0);
-		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
-		glEnd();
-	glPopMatrix();
-	glDisable(GL_TEXTURE_2D);
 }
 
 
@@ -1050,12 +749,12 @@ void drawNegativeZ(){
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	initMaterials(4);
+	initMaterials(6);
 
 	//glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
-		glBegin(GL_QUAD_STRIP);
+		glBegin(GL_QUADS);
 				//glTexCoord2f(0.0f,0.0f); 
 			glVertex3i( -corner,  0, -corner );
 				//glTexCoord2f(1.0f,0.0f); 
@@ -1064,6 +763,7 @@ void drawNegativeZ(){
 			glVertex3i( corner, altura, -corner);
 				//glTexCoord2f(0.0f,1.0f); 
 			glVertex3i( -corner,  altura,  -corner);
+		
 		glEnd();
 	glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
@@ -1167,28 +867,28 @@ void drawMirror(){
 }
 
 void drawBoxTeaPot(){
-	//Desenha Chaleira no Meio da Mesa
 
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	initMaterials(5); //Gold
+	initMaterials(5);
 
 	glPushMatrix();
-		glTranslatef(0,4.5,0);
+		//glTranslatef(-corner+3,1.2,-corner+3);
+		glTranslatef(0,5,0);
 		glRotatef(angBule, 0, 1, 0);
-		glutSolidTeapot(1.3);
+		glutSolidTeapot(1.5);
 	glPopMatrix();
 
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
-	//Desenha caixa transparente no centro da mesa
 	glEnable(GL_BLEND);
 	glPushMatrix();
+		//glTranslatef(-corner+3,1.75,-corner+3);
 		glTranslatef(0,6,0);
 		glColor4f(WHITE_T);
-		glutSolidCube(4.8);
+		glutSolidCube(4.5);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
@@ -1224,8 +924,7 @@ void drawScene(){
 
 	//== Draw Chips
 	drawChips();
-	drawTableCards();
-	drawHandCards();
+	drawCards();
 
 	//=== DRAW REFLECTIONS
 	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
@@ -1257,7 +956,6 @@ void drawScene(){
 		drawTableLeg();
 		drawTableLimits();
 		drawChips();
-		drawTableCards();
 		drawBoxTeaPot();
 	glPopMatrix();
 
