@@ -90,15 +90,26 @@ GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0};
 
 //Localização do candeeiro
 GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
-GLfloat lightsPos[4][4] = {{-corner,0,-corner,1.0},
-							{-corner,0,corner,1.0},
-							{corner,0,-corner,1.0},
-							{corner,0,corner,1.0}};
+GLfloat lightsPos[4][4] = {{-corner + 0.5, 5, -corner + 0.5, 1.0},
+							{-corner + 0.5 , 5, corner - 0.5, 1.0},
+							{corner - 0.5, 5, -corner + 0.5, 1.0},
+							{corner - 0.5, 5, corner - 0.5, 1.0}};
 
 //Define um "candeeiro"
 //Definição da luz "simples" / "branca";
-GLfloat luzCandeeirolCor[4]={0.1, 0.1, 0.1, 1.0};
-GLfloat lightsLuzes[4][4] = {{AZUL}, {AMARELO},{VERMELHO}, {VERDE}}; 
+GLfloat luzCandeeirolCor[4] = {0.1, 0.1, 0.1, 1.0};
+GLfloat lightsLuzes[4] = {0.1, 0.1, 0.1, 1.0}; 
+							
+
+GLfloat lightsDirections [3] = {0, -1, 0};
+
+GLfloat concentracaoFoco = 0.3;
+
+GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0};
+
+GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 
+
+GLfloat anguloFoco = 20;
 
 //Caracteristicas do candeeiro da atenuação atmosférica
 GLfloat candeeiroAttCon =1.0;
@@ -118,18 +129,39 @@ void initLights(){
 
 	//Candeeiro
 	glLightfv(GL_LIGHT0, GL_POSITION, candeeiroPos );
-	glLightfv(GL_LIGHT0, GL_SPECULAR, luzCandeeirolCor );
+	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor );
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
 
 	//CORNER LIGHTS
-	glLightfv(GL_LIGHT1, GL_POSITION, lightsPos[0]);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, lightsLuzes[0] );
-	glLightf (GL_LIGHT1, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
-	glLightf (GL_LIGHT1, GL_LINEAR_ATTENUATION, candeeiroAttLin);
-	glLightf (GL_LIGHT1, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
+	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );
 
+	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
+	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT2, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT2, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT2, GL_SPECULAR,      focoCorEsp  );
+
+	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT3, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT3, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT3, GL_SPECULAR,      focoCorEsp  );
+
+	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT4, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT4, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT4, GL_SPECULAR,      focoCorEsp  );
 }
 
 
@@ -315,11 +347,11 @@ void initMaterials(int material)
 			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
 			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
 			break;
-		case 6:
-			glMaterialfv(GL_FRONT,GL_AMBIENT,  redRubberAmb  );
-			glMaterialfv(GL_FRONT,GL_DIFFUSE,  redRubberDif );
-			glMaterialfv(GL_FRONT,GL_SPECULAR, redRubberSpec);
-			glMateriali (GL_FRONT,GL_SHININESS,redRubberCoef);
+		case 6: //yellowPlastic
+			glMaterialfv(GL_FRONT,GL_AMBIENT,  whitePlasticAmb  );
+			glMaterialfv(GL_FRONT,GL_DIFFUSE,  whitePlasticDif );
+			glMaterialfv(GL_FRONT,GL_SPECULAR, whitePlasticSpec);
+			glMateriali (GL_FRONT,GL_SHININESS,whitePlasticCoef);
 			break;
 	}
 
@@ -348,6 +380,9 @@ void init(void)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
+	glEnable(GL_LIGHT3);
+	glEnable(GL_LIGHT4);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -498,12 +533,30 @@ void iluminacao(){
 	}
 	if (ligaFocos){
 		glEnable(GL_LIGHT1);
+		glEnable(GL_LIGHT2);
+		glEnable(GL_LIGHT3);
+		glEnable(GL_LIGHT4);
 		printf("foco ligado\n");
 	}
 	else{
 		glDisable(GL_LIGHT1);
+		glDisable(GL_LIGHT2);
+		glDisable(GL_LIGHT3);
+		glDisable(GL_LIGHT4);
 		printf("foco desligado\n");
 	}
+
+	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lightsDirections);
+
+	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
+	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lightsDirections);
+
+	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, lightsDirections);
+
+	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightsDirections);
 }
 
 
@@ -688,16 +741,21 @@ void drawNegativeZ(){
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	initMaterials(1);
+	initMaterials(6);
 
 	//glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, -corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  -corner);
+				//glTexCoord2f(0.0f,0.0f); 
+			glVertex3i( -corner,  0, -corner );
+				//glTexCoord2f(1.0f,0.0f); 
+			glVertex3i( corner, 0, -corner );
+				//glTexCoord2f(1.0f,1.0f); 
+			glVertex3i( corner, altura, -corner);
+				//glTexCoord2f(0.0f,1.0f); 
+			glVertex3i( -corner,  altura,  -corner);
+		
 		glEnd();
 	glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
@@ -717,10 +775,14 @@ void drawPositiveZ(){
 	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, corner );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( -corner, 0, corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( -corner, altura, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  corner);
+				//glTexCoord2f(0.0f,0.0f); 
+			glVertex3i( corner,  0, corner );
+				//glTexCoord2f(1.0f,0.0f); 
+			glVertex3i( -corner, 0, corner );
+				//glTexCoord2f(1.0f,1.0f); 
+			glVertex3i( -corner, altura, corner);
+				//glTexCoord2f(0.0f,1.0f); 
+			glVertex3i( corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
@@ -766,10 +828,14 @@ void drawPositiveX(){
 	//glBindTexture(GL_TEXTURE_2D,texture[2]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3i( corner,  0, -corner );
-			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, corner );
-			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, corner);
-			glTexCoord2f(0.0f,1.0f); glVertex3i( corner,  altura,  -corner);
+				//glTexCoord2f(0.0f,0.0f); 
+			glVertex3i( corner,  0, -corner );
+				//glTexCoord2f(1.0f,0.0f); 
+			glVertex3i( corner, 0, corner );
+				//glTexCoord2f(1.0f,1.0f); 
+			glVertex3i( corner, altura, corner);
+				//glTexCoord2f(0.0f,1.0f); 
+			glVertex3i( corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
