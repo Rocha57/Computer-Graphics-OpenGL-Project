@@ -130,24 +130,45 @@ GLint ligaFocos = 0;
 //==============Init lights================//
 
 void initLights(){
-	//Ambiente
+//Ambiente
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbienteCor);
 
 	//Candeeiro
 	glLightfv(GL_LIGHT0, GL_POSITION, candeeiroPos );
-	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor );
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
 
 	//CORNER LIGHTS
-	glLightfv(GL_LIGHT1, GL_POSITION,      focoPosInit1);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,focoDir1);
+	//BOTA A MOER
+	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,lightsDirections);
 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,concentracaoFoco);
 	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF,   anguloFoco);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE,       corDifusaFoco);   
-	glLightfv(GL_LIGHT1, GL_SPECULAR,      corEspecularFoco);
-	
+	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );
+
+	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
+	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT2, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT2, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT2, GL_SPECULAR,      focoCorEsp  );
+
+	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT3, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT3, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT3, GL_SPECULAR,      focoCorEsp  );
+
+	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION,lightsDirections);
+	glLightf (GL_LIGHT4, GL_SPOT_EXPONENT ,concentracaoFoco);
+	glLightf (GL_LIGHT4, GL_SPOT_CUTOFF,   anguloFoco);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE,       focoCorDif );   
+	glLightfv(GL_LIGHT4, GL_SPECULAR,      focoCorEsp  );
 }
 
 
@@ -520,7 +541,6 @@ void iluminacao(){
 	}
 	if (ligaFocos){
 		glEnable(GL_LIGHT1);
-<<<<<<< Updated upstream
 		glEnable(GL_LIGHT2);
 		glEnable(GL_LIGHT3);
 		glEnable(GL_LIGHT4);
@@ -532,24 +552,19 @@ void iluminacao(){
 		glDisable(GL_LIGHT3);
 		glDisable(GL_LIGHT4);
 		//printf("foco desligado\n");
-=======
-		//glEnable(GL_LIGHT2);
-		//glEnable(GL_LIGHT3);
-		//glEnable(GL_LIGHT4);
-		printf("foco ligado\n");
-	}
-	else{
-		glDisable(GL_LIGHT1);
-		//glDisable(GL_LIGHT2);
-		//glDisable(GL_LIGHT3);
-		//glDisable(GL_LIGHT4);
-		printf("foco desligado\n");
->>>>>>> Stashed changes
 	}
 
-	glLightfv(GL_LIGHT1, GL_POSITION,      focoPosInit1);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, focoDir1);
+	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lightsDirections);
 
+	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
+	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lightsDirections);
+
+	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, lightsDirections);
+
+	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightsDirections);
 }
 
 
