@@ -78,6 +78,7 @@ GLuint  cards[13];
 
 
 //------------------------------------------------------------ Materiais
+// Propriedades dos materiais
 GLfloat matAmbiente[] = {1.0,1.0,1.0,1.0};	  
 GLfloat matDifusa[]   = {1.0,1.0,1.0,1.0};	  
 GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0}; 
@@ -88,28 +89,33 @@ GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0};
 //Define luz ambiente
 GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0}; 
 
-//Localização do candeeiro
+//Localização do candeeiro central
 GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
-GLfloat lightsPos[4][4] = {{-corner + 0.5, 5, -corner + 0.5, 1.0},
-							{-corner + 0.5 , 5, corner - 0.5, 1.0},
-							{corner - 0.5, 5, -corner + 0.5, 1.0},
-							{corner - 0.5, 5, corner - 0.5, 1.0}};
-
-//Define um "candeeiro"
-//Definição da luz "simples" / "branca";
+//Cor do candeeiro central
 GLfloat luzCandeeirolCor[4] = {0.1, 0.1, 0.1, 1.0};
-GLfloat lightsLuzes[4] = {0.1, 0.1, 0.1, 1.0}; 
-							
 
-GLfloat lightsDirections [3] = {0, -1, 0};
 
-GLfloat concentracaoFoco = 0.3;
+//================ Focos
 
-GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0};
 
-GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 
+//Difusa do Foco
+GLfloat corDifusaFoco[4] ={ 0.8,0.8,0.8, 1.0};
+//Especular do Foco
+GLfloat corEspecularFoco[4] ={ 1.0, 1.0, 1.0, 1.0};
+//Angulo
+GLfloat anguloFoco = 0.5*PI;
+GLfloat rFoco = 2;
+// Localização dos focos
+GLfloat focoPosInit1 [4] = {0, 15.0, 0, 1.0};
+//Posivao final
+GLfloat focoPosFin1 [4] = {rFoco*cos(0.5*PI), 20, rFoco*sin(0.5*PI), 1.0};
 
-GLfloat anguloFoco = 20;
+//Direcção do foco
+//GLfloat focoDir1 [3] = {focoPosFin1[0] - focoPosInit1[0], focoPosFin1[1] - focoPosInit1[1], focoPosFin1[2] - focoPosInit1[2]};
+GLfloat focoDir1 [3] = {1,0,1};
+
+//Concentração da cor
+GLfloat concentracaoFoco = 0.5;
 
 //Caracteristicas do candeeiro da atenuação atmosférica
 GLfloat candeeiroAttCon =1.0;
@@ -129,39 +135,19 @@ void initLights(){
 
 	//Candeeiro
 	glLightfv(GL_LIGHT0, GL_POSITION, candeeiroPos );
-	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor );
+	glLightfv(GL_LIGHT0, GL_AMBIENT, luzCandeeirolCor);
 	glLightf (GL_LIGHT0, GL_CONSTANT_ATTENUATION, candeeiroAttCon);
 	glLightf (GL_LIGHT0, GL_LINEAR_ATTENUATION, candeeiroAttLin);
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
 
 	//CORNER LIGHTS
-	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,lightsDirections);
+	glLightfv(GL_LIGHT1, GL_POSITION,      focoPosInit1);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,focoDir1);
 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,concentracaoFoco);
 	glLightf (GL_LIGHT1, GL_SPOT_CUTOFF,   anguloFoco);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE,       focoCorDif );   
-	glLightfv(GL_LIGHT1, GL_SPECULAR,      focoCorEsp  );
-
-	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
-	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION,lightsDirections);
-	glLightf (GL_LIGHT2, GL_SPOT_EXPONENT ,concentracaoFoco);
-	glLightf (GL_LIGHT2, GL_SPOT_CUTOFF,   anguloFoco);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE,       focoCorDif );   
-	glLightfv(GL_LIGHT2, GL_SPECULAR,      focoCorEsp  );
-
-	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
-	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION,lightsDirections);
-	glLightf (GL_LIGHT3, GL_SPOT_EXPONENT ,concentracaoFoco);
-	glLightf (GL_LIGHT3, GL_SPOT_CUTOFF,   anguloFoco);
-	glLightfv(GL_LIGHT3, GL_DIFFUSE,       focoCorDif );   
-	glLightfv(GL_LIGHT3, GL_SPECULAR,      focoCorEsp  );
-
-	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
-	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION,lightsDirections);
-	glLightf (GL_LIGHT4, GL_SPOT_EXPONENT ,concentracaoFoco);
-	glLightf (GL_LIGHT4, GL_SPOT_CUTOFF,   anguloFoco);
-	glLightfv(GL_LIGHT4, GL_DIFFUSE,       focoCorDif );   
-	glLightfv(GL_LIGHT4, GL_SPECULAR,      focoCorEsp  );
+	glLightfv(GL_LIGHT1, GL_DIFFUSE,       corDifusaFoco);   
+	glLightfv(GL_LIGHT1, GL_SPECULAR,      corEspecularFoco);
+	
 }
 
 
@@ -373,6 +359,10 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
+	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbiente);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, matEspecular);
+  	glMaterialfv(GL_FRONT, GL_SHININESS, matDifusa);
+
 	initMaterials(5);
 
 	initLights();
@@ -380,9 +370,6 @@ void init(void)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
-	glEnable(GL_LIGHT2);
-	glEnable(GL_LIGHT3);
-	glEnable(GL_LIGHT4);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -533,6 +520,7 @@ void iluminacao(){
 	}
 	if (ligaFocos){
 		glEnable(GL_LIGHT1);
+<<<<<<< Updated upstream
 		glEnable(GL_LIGHT2);
 		glEnable(GL_LIGHT3);
 		glEnable(GL_LIGHT4);
@@ -544,19 +532,24 @@ void iluminacao(){
 		glDisable(GL_LIGHT3);
 		glDisable(GL_LIGHT4);
 		//printf("foco desligado\n");
+=======
+		//glEnable(GL_LIGHT2);
+		//glEnable(GL_LIGHT3);
+		//glEnable(GL_LIGHT4);
+		printf("foco ligado\n");
+	}
+	else{
+		glDisable(GL_LIGHT1);
+		//glDisable(GL_LIGHT2);
+		//glDisable(GL_LIGHT3);
+		//glDisable(GL_LIGHT4);
+		printf("foco desligado\n");
+>>>>>>> Stashed changes
 	}
 
-	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lightsDirections);
+	glLightfv(GL_LIGHT1, GL_POSITION,      focoPosInit1);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, focoDir1);
 
-	glLightfv(GL_LIGHT2, GL_POSITION,      lightsPos[1]);
-	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, lightsDirections);
-
-	glLightfv(GL_LIGHT3, GL_POSITION,      lightsPos[2]);
-	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, lightsDirections);
-
-	glLightfv(GL_LIGHT4, GL_POSITION,      lightsPos[3]);
-	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightsDirections);
 }
 
 
