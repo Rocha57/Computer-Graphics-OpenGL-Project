@@ -6,6 +6,7 @@
 
 //For windows
 //#include <windows.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -35,8 +36,7 @@
 #define BROWN    0.545098, 0.270588, 0.0745098, 1.0
 #define PI		 3.14159
 
-//================================================================================
-//===========================================================Variaveis e constantes
+//================Variaveis e constantes
 
 //------------------------------------------------------------ Sistema Coordenadas
 GLfloat   corner = 20.0;
@@ -44,16 +44,14 @@ GLfloat   altura = 25.0;
 GLint     wScreen=800, hScreen=600;
 
 //------------------------------------------------------------ Observador
-GLint    defineView=0;
-GLint    defineProj=1;
+
 GLfloat  raio   = corner;
 GLfloat  angulo = 0.35*PI;
 
-//====== Coordenadas do observador e coordenadas para onde ele olha
+//-----------------------------------Coordenadas do observador e coordenadas para onde ele olha
 
 GLfloat  obsP[] = {raio*cos(angulo),corner, raio*sin(angulo)};
 GLfloat	 olharPara[] = {0, 6, 0};
-//GLfloat	 olharPara[] = {0, 3, 0};
 
 //=======
 GLfloat  incy   = 0.5;
@@ -61,58 +59,53 @@ GLfloat  incrementaAngulo   = 0.03;
 GLfloat  angBule = 0;
 GLfloat  incBule = 10;
 
-//------------------------------------------------------------ Texturas
-GLint    repete=2;
-GLfloat  rr=1;
-GLint    maxR  =20;
-GLint    numFrames =5;              //numero de imagens a colocar em loop na tela
 GLint    msec=100;					//.. definicao do timer (actualizacao)
 
 
 //------------------------------------------------------------ Texturas
-GLuint  texture[6];
+//Imagem...
 RgbImage imag;
 
+//Texturas da sala... Paredes, chão, mesa...
+GLuint  texture[6];
+
+//Texturas dos bonecos... Caras e fatos
 GLuint tuxedo1Textures[2];
 GLuint tuxedo2Textures[2];
 GLuint tuxedo3Textures[2];
 GLuint tuxedo4Textures[2];
 
+//Texturas das cartas
 GLuint  cards[13];
 
 
-//------------------------------------------------------------ Materiais
-GLfloat matAmbiente[] = {1.0,1.0,1.0,1.0};	  
-GLfloat matDifusa[]   = {1.0,1.0,1.0,1.0};	  
-GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0}; 
-
-
-//===================== Lights =================//
-
+//----------------------------------- Iluminação
 //Define luz ambiente
 GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0}; 
 
+//Define um "candeeiro"
 //Localização do candeeiro
 GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
+
 GLfloat lightsPos[4][4] = {{-corner + 0.5, 5, -corner + 0.5, 1.0},
 							{-corner + 0.5 , 5, corner - 0.5, 1.0},
 							{corner - 0.5, 5, -corner + 0.5, 1.0},
 							{corner - 0.5, 5, corner - 0.5, 1.0}};
 
-//Define um "candeeiro"
 //Definição da luz "simples" / "branca";
 GLfloat luzCandeeirolCor[4] = {0.1, 0.1, 0.1, 1.0};
+
+//Cor dos focos de luz
 GLfloat lightsLuzes[4] = {0.1, 0.1, 0.1, 1.0}; 
-							
-
+//Direção dos focos de luz							
 GLfloat lightsDirections [3] = {0, -1, 0};
-
+//Concentração dos focos (Intencidade da luz)
 GLfloat concentracaoFoco = 0.3;
 
+//Componentes difusa e especular para os focus de luz
 GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0};
-
 GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 
-
+//Angulo do foco
 GLfloat anguloFoco = 20;
 
 //Caracteristicas do candeeiro da atenuação atmosférica
@@ -120,15 +113,20 @@ GLfloat candeeiroAttCon =1.0;
 GLfloat candeeiroAttLin =0.05;
 GLfloat candeeiroAttQua =0.0;
 
+
+//------------------------------------------ Componentes de luz para os materiais
+GLfloat matAmbiente[] = {1.0,1.0,1.0,1.0};	  
+GLfloat matDifusa[]   = {1.0,1.0,1.0,1.0};	  
+GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0}; 
+
+
 //Just some flags
 GLint ligaLuz = 0;
 GLint treeSixty = 0;
 GLint ligaFocos = 0;
 
-char     texto[30];
 
-//==============Init lights================//
-
+//---------------- Iniciar as luzes
 void initLights(){
 	//Ambiente
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbienteCor);
@@ -141,7 +139,7 @@ void initLights(){
 	glLightf (GL_LIGHT0, GL_QUADRATIC_ATTENUATION,candeeiroAttQua);
 
 	//CORNER LIGHTS
-	//BOTA A MOER
+	
 	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION,lightsDirections);
 	glLightf (GL_LIGHT1, GL_SPOT_EXPONENT ,concentracaoFoco);
@@ -171,7 +169,7 @@ void initLights(){
 	glLightfv(GL_LIGHT4, GL_SPECULAR,      focoCorEsp  );
 }
 
-
+//---------- Carregar e iniciar as texturas
 void criaDefineTexturas()
 {
 
@@ -220,7 +218,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//------------------------------------------ Mirror
-
 	glGenTextures(1, &texture[3]);
 	glBindTexture(GL_TEXTURE_2D, texture[3]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -235,7 +232,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//------------------------------------------ Chao
-
 	glGenTextures(1, &texture[4]);
 	glBindTexture(GL_TEXTURE_2D, texture[4]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -250,7 +246,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//------------------------------------------ Tecto
-
 	glGenTextures(1, &texture[5]);
 	glBindTexture(GL_TEXTURE_2D, texture[5]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -264,6 +259,7 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+	//---------------------------------- Cartas, parte da frente
 	glGenTextures(1, &cards[0]);
 	glBindTexture(GL_TEXTURE_2D, cards[0]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -277,6 +273,7 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
+	//---------------------------------- Cartas, parte de trás
 	glGenTextures(1, &cards[1]);
 	glBindTexture(GL_TEXTURE_2D, cards[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -290,9 +287,8 @@ void criaDefineTexturas()
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
-	//------------------------------------------- FATO
-	
 
+	//------------------------------------------- FATO
 	// -- Player 1
 	//--- Front
 	glGenTextures(1, &tuxedo1Textures[0]);
@@ -309,7 +305,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//--- Head
-
 	glGenTextures(1, &tuxedo1Textures[1]);
 	glBindTexture(GL_TEXTURE_2D, tuxedo1Textures[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -339,7 +334,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//--- Head
-
 	glGenTextures(1, &tuxedo2Textures[1]);
 	glBindTexture(GL_TEXTURE_2D, tuxedo2Textures[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -370,7 +364,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//--- Head
-
 	glGenTextures(1, &tuxedo3Textures[1]);
 	glBindTexture(GL_TEXTURE_2D, tuxedo3Textures[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -400,7 +393,6 @@ void criaDefineTexturas()
 		imag.ImageData());
 
 	//--- Head
-
 	glGenTextures(1, &tuxedo4Textures[1]);
 	glBindTexture(GL_TEXTURE_2D, tuxedo4Textures[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
@@ -417,6 +409,7 @@ void criaDefineTexturas()
 }
 
 
+//--------- Iniciar os materiais. Material color
 void initMaterials(int material)
 {
 	switch(material){
@@ -460,6 +453,7 @@ void initMaterials(int material)
 
 }
 
+//----- Init all constants and functions
 void init(void)
 {
 	glClearColor(BLACK);
@@ -496,17 +490,15 @@ void resizeWindow(GLsizei w, GLsizei h)
 {
  	wScreen=w;
 	hScreen=h;
-	//glViewport( 0, 0, wScreen,hScreen );
-	//glutReshapeWindow(wScreen,hScreen);
+
 	glutPostRedisplay();
 }
 
-//== Draw players one by one
 
+//------- Desenhar a frente dos players, com aplicação das texturas
 void drawTuxedos(){
 
 	// --- Player 1
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo1Textures[0]);
 	glPushMatrix();
@@ -520,7 +512,6 @@ void drawTuxedos(){
 	glDisable(GL_TEXTURE_2D);
 
 	// --- Player 2
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo2Textures[0]);
 	glPushMatrix();
@@ -534,7 +525,6 @@ void drawTuxedos(){
 	glDisable(GL_TEXTURE_2D);
 
 	// --- Player 3
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo3Textures[0]);
 	glPushMatrix();
@@ -548,7 +538,6 @@ void drawTuxedos(){
 	glDisable(GL_TEXTURE_2D);
 
 	// --- Player 4
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo4Textures[0]);
 	glPushMatrix();
@@ -560,13 +549,12 @@ void drawTuxedos(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
-
 }
 
+//----- Desenhar a cabeça dos players. Com aplicação das texturas
 void drawHeads(){
 
 	// --- Player 1
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo1Textures[1]);
 	glPushMatrix();
@@ -580,7 +568,6 @@ void drawHeads(){
 	glDisable(GL_TEXTURE_2D);
 
 	// --- Player 2
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo2Textures[1]);
 	glPushMatrix();
@@ -607,7 +594,6 @@ void drawHeads(){
 	glDisable(GL_TEXTURE_2D);
 
 	// --- Player 4
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,tuxedo4Textures[1]);
 	glPushMatrix();
@@ -623,14 +609,14 @@ void drawHeads(){
 }
 
 
+// ---- Função que desenha o corpo e a cabeça dos players como sendo um solid cube
+// Aplicadas as transformações necessárias para que eles obtenham aquela forma
 void drawPlayers(){
 
 	GLint i = 0;
+	//Posição inicial de cada player
 	GLfloat playersBodys[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
-
 	GLfloat playersHeads[4][3] = {{10, 11, 0}, {0, 11, -10}, {-10, 11, 0}, {0, 11, 10}};
-
-	//glColor4f(WHITE);
 	
 	//Usar Materiais
 	glDisable(GL_COLOR_MATERIAL);
@@ -640,6 +626,7 @@ void drawPlayers(){
 	
 	initMaterials(5);
 
+	//Mais eficiente, criar os players com recurso a um ciclo
 	for (i = 0; i <= 3; i++)
 	{
 		glPushMatrix();
@@ -667,44 +654,39 @@ void drawPlayers(){
 	//Cancela Materiais
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-	//drawPlayer1();
 
+	// Desenhar a parte da frente e a parte da cabeça com texturas
 	drawTuxedos();
-
 	drawHeads();
 }
 
-//======================================================================== ILUMINCCAO
-/**
-* Verifica se a luz está ligada ou não
-**/
+//---- Tratamento/Controlo da iluminação
 void iluminacao(){
 	
 	if (ligaLuz){
 
 		glEnable(GL_LIGHT0);
-		//printf("Luz ligada: %d\n", ligaLuz);
+		
 	}
 	else{
 
 		glDisable(GL_LIGHT0);
-		//printf("Luz desligada: %d\n", ligaLuz);
+
 	}
 	if (ligaFocos){
 		glEnable(GL_LIGHT1);
 		glEnable(GL_LIGHT2);
 		glEnable(GL_LIGHT3);
 		glEnable(GL_LIGHT4);
-		//printf("foco ligado\n");
 	}
 	else{
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHT2);
 		glDisable(GL_LIGHT3);
 		glDisable(GL_LIGHT4);
-		//printf("foco desligado\n");
 	}
 
+	//Propriedades dadas a cada foco de luz
 	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, lightsDirections);
 
@@ -718,14 +700,12 @@ void iluminacao(){
 	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, lightsDirections);
 }
 
-
+//--- Desenhar as fichas que estão em cima da mesa
 void drawChips(){
-	//glDisable(GL_COLOR_MATERIAL);
-	//glEnable(GL_LIGHTING);
+	
 	
 	initLights();
 	
-	//initMaterials(1);
 	glColor4f(VERMELHO);
 	glPushMatrix();
 		glTranslatef(-6.5,4.05,0.0);
@@ -741,7 +721,6 @@ void drawChips(){
 	glPopMatrix();
 
 
-	//initMaterials(2);
 	glColor4f(VERDE);
 	glPushMatrix();
 		glTranslatef(6.5,4.05,0.0);
@@ -757,7 +736,6 @@ void drawChips(){
 	glPopMatrix();
 
 
-	//initMaterials(3);
 	glColor4f(AZUL);
 	glPushMatrix();
 		glTranslatef(0.0,4.05,-6.5);
@@ -773,7 +751,6 @@ void drawChips(){
 	glPopMatrix();
 
 
-	//initMaterials(4);
 	glColor4f(AMARELO);
 	glPushMatrix();
 		glTranslatef(0.0,4.05,6.5);
@@ -788,10 +765,9 @@ void drawChips(){
 		gluCylinder(quadobj10, 0.5, 0.5, 0.2, 100, 100);
 	glPopMatrix();
 
-	//glEnable(GL_COLOR_MATERIAL);
-	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
+//--- Desenhar as cartas que estão nas mãos dos players
 void drawHandCards(){
 	//-----------------------------------------PLAYER 1
 
@@ -856,7 +832,6 @@ void drawHandCards(){
 	glDisable(GL_CULL_FACE);
 
 	//----------------------------------------------PLAYER 2
-
 	//LEFT HAND CARD
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -918,7 +893,6 @@ void drawHandCards(){
 	glDisable(GL_CULL_FACE);
 
 	//-----------------------------------------PLAYER 3
-
 	//LEFT HAND CARD
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -980,7 +954,6 @@ void drawHandCards(){
 	glDisable(GL_CULL_FACE);
 
 	//----------------------------------------------PLAYER 4
-
 	//LEFT HAND CARD
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -1042,6 +1015,8 @@ void drawHandCards(){
 	glDisable(GL_CULL_FACE);
 }
 
+
+//--- Desenhar as cartas que estão em cima da mesa de vidro
 void drawTableCards(){
 	//2 of Hearts Front Card
 	glCullFace(GL_BACK);
@@ -1128,12 +1103,7 @@ void drawTableCards(){
 }
 
 
-/**
-*	Adicionadas novas funções de draw, mais fácil para posteriormente serem feitas as reflexões
-**/
-
-//====== DESENHAR A MESA
-
+// --- Funções de desenho para a cena. Bastante explicativas
 void drawTableLeg(){
 
 	glEnable(GL_TEXTURE_2D);
@@ -1177,7 +1147,7 @@ void drawTableLimits(){
 	glPopMatrix();
 }
 
-//===== DESENHAR O "MUNDO"
+
 void drawFloor(int height){
 
 	glEnable(GL_TEXTURE_2D);
@@ -1198,11 +1168,6 @@ void drawFloor(int height){
 
 void drawNegativeZ(){
 
-	//glDisable(GL_COLOR_MATERIAL);
-	//glEnable(GL_LIGHTING);
-
-	//initMaterials(4);
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,texture[1]);
 
@@ -1215,9 +1180,7 @@ void drawNegativeZ(){
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
-	//glEnable(GL_COLOR_MATERIAL);
-	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-
+	
 }
 
 void drawPositiveZ(){
@@ -1227,21 +1190,15 @@ void drawPositiveZ(){
 
 	initMaterials(2);
 
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-				//glTexCoord2f(0.0f,0.0f); 
-			glVertex3i( corner,  0, corner );
-				//glTexCoord2f(1.0f,0.0f); 
+			glVertex3i( corner,  0, corner ); 
 			glVertex3i( -corner, 0, corner );
-				//glTexCoord2f(1.0f,1.0f); 
 			glVertex3i( -corner, altura, corner);
-				//glTexCoord2f(0.0f,1.0f); 
 			glVertex3i( corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
+	
 
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
@@ -1253,21 +1210,16 @@ void drawNegativeX(){
 	glEnable(GL_LIGHTING);
 
 	initMaterials(3);
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D,texture[2]);
+	
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			/*glTexCoord2f(0.0f,0.0f); 
-			glTexCoord2f(1.0f,0.0f); 
-			glTexCoord2f(1.0f,1.0f); 
-			glTexCoord2f(0.0f,1.0f);*/ 
 			glVertex3i( -corner,  0, corner);
 			glVertex3i( -corner, 0, -corner );
 			glVertex3i( -corner, altura, -corner);
 			glVertex3i( -corner,  altura,  corner);
 		glEnd();
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
+	
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
@@ -1280,21 +1232,15 @@ void drawPositiveX(){
 
 	initMaterials(4);
 
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D,texture[2]);
+	
 	glPushMatrix();
 		glBegin(GL_QUADS);
-				//glTexCoord2f(0.0f,0.0f); 
 			glVertex3i( corner,  0, -corner );
-				//glTexCoord2f(1.0f,0.0f); 
 			glVertex3i( corner, 0, corner );
-				//glTexCoord2f(1.0f,1.0f); 
 			glVertex3i( corner, altura, corner);
-				//glTexCoord2f(0.0f,1.0f); 
 			glVertex3i( corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
@@ -1422,41 +1368,10 @@ void drawScene(){
 
 	drawNegativeZ();
 	drawBoxTeaPot();
-	
-	
-	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Eixos
-	//XX
-	/*glColor4f(LARANJA);
-	glBegin(GL_LINES);
-		glVertex3i( 0, 0, 0);
-		glVertex3i(10, 0, 0);
-	glEnd();
-	//YY
-	glColor4f(BLACK);
-	glBegin(GL_LINES);
-		glVertex3i(0,  0, 0);
-		glVertex3i(0, 10, 0);
-	glEnd();
-	//ZZ
-	glColor4f(WHITE);
-	glBegin(GL_LINES);
-		glVertex3i( 0, 0, 0);
-		glVertex3i( 0, 0,10);
-	glEnd();*/
 
 	
 	glutPostRedisplay();
 
-	//glutSwapBuffers();
-
-}
-
-void desenhaTexto(char *string, GLfloat x, GLfloat y, GLfloat z) 
-{  
-	glColor4d(VERMELHO);
-	glRasterPos3f(x,y,z); 
-	while(*string)
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *string++); 
 }
 
 
@@ -1476,9 +1391,6 @@ void display(void){
 
 	glLoadIdentity();
 
-	//GluPerspective vai ser tridimensional
-	//Muda projecção:
-
 	gluPerspective(88.0, wScreen/hScreen, 0.1, 6*corner); 		
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[ Modelo+View(camera/observador) ]
@@ -1497,13 +1409,6 @@ void display(void){
 	drawScene();
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Actualizacao
-
-	// -------------------------------- Informação
-
-	if(treeSixty){
-		sprintf(texto, "Projeccao: 360º");
-		desenhaTexto(texto, 0, 16 , -corner+0.1); 
-	}
 
 	glutSwapBuffers();
 }
@@ -1627,14 +1532,34 @@ void teclasNotAscii(int key, int x, int y){
 	if (treeSixty)
 	{
 		if(key == GLUT_KEY_LEFT){
-		angulo = angulo + incrementaAngulo;
+			angulo = angulo + incrementaAngulo;
 		}
+
 		if(key == GLUT_KEY_RIGHT){
 			angulo = angulo - incrementaAngulo;
 		}
 
+		if(key == GLUT_KEY_UP){
+			obsP[1]=obsP[1]+incy;
+
+			if (obsP[1] > corner)
+			{	
+				obsP[1] = corner - 0.1;
+			}
+		}
+
+		
+		if(key == GLUT_KEY_DOWN)
+		{
+			obsP[1]=obsP[1]-incy;
+			if (obsP[1] < 0)
+			{
+				obsP[1] = 0.1;
+			}
+		}
+
 		obsP[0] = raio*cos(angulo);
-    	obsP[1] = corner; 
+    	//obsP[1] = corner; 
 		obsP[2] = raio*sin(angulo);
 	}
 	
