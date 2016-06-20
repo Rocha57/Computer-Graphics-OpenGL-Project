@@ -73,12 +73,15 @@ GLint    msec=100;					//.. definicao do timer (actualizacao)
 GLuint  texture[6];
 RgbImage imag;
 
-GLuint tuxedoTextures[5];
+GLuint tuxedo1Textures[2];
+GLuint tuxedo2Textures[2];
+GLuint tuxedo3Textures[2];
+GLuint tuxedo4Textures[2];
+
 GLuint  cards[13];
 
 
 //------------------------------------------------------------ Materiais
-// Propriedades dos materiais
 GLfloat matAmbiente[] = {1.0,1.0,1.0,1.0};	  
 GLfloat matDifusa[]   = {1.0,1.0,1.0,1.0};	  
 GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0}; 
@@ -89,33 +92,28 @@ GLfloat matEspecular[]= {1.0, 1.0, 1.0, 1.0};
 //Define luz ambiente
 GLfloat luzAmbienteCor[4]={1.0,1.0,1.0,1.0}; 
 
-//Localização do candeeiro central
+//Localização do candeeiro
 GLfloat candeeiroPos[4] ={0.0, 25.0, 0.0, 1.0};
-//Cor do candeeiro central
+GLfloat lightsPos[4][4] = {{-corner + 0.5, 5, -corner + 0.5, 1.0},
+							{-corner + 0.5 , 5, corner - 0.5, 1.0},
+							{corner - 0.5, 5, -corner + 0.5, 1.0},
+							{corner - 0.5, 5, corner - 0.5, 1.0}};
+
+//Define um "candeeiro"
+//Definição da luz "simples" / "branca";
 GLfloat luzCandeeirolCor[4] = {0.1, 0.1, 0.1, 1.0};
+GLfloat lightsLuzes[4] = {0.1, 0.1, 0.1, 1.0}; 
+							
 
+GLfloat lightsDirections [3] = {0, -1, 0};
 
-//================ Focos
+GLfloat concentracaoFoco = 0.3;
 
+GLfloat focoCorEsp[4] ={ 1.0 ,  1.0, 1.0, 1.0};
 
-//Difusa do Foco
-GLfloat corDifusaFoco[4] ={ 0.8,0.8,0.8, 1.0};
-//Especular do Foco
-GLfloat corEspecularFoco[4] ={ 1.0, 1.0, 1.0, 1.0};
-//Angulo
-GLfloat anguloFoco = 0.5*PI;
-GLfloat rFoco = 2;
-// Localização dos focos
-GLfloat focoPosInit1 [4] = {0, 15.0, 0, 1.0};
-//Posivao final
-GLfloat focoPosFin1 [4] = {rFoco*cos(0.5*PI), 20, rFoco*sin(0.5*PI), 1.0};
+GLfloat focoCorDif[4] ={ 0.85, 0.85,0.85, 1.0}; 
 
-//Direcção do foco
-//GLfloat focoDir1 [3] = {focoPosFin1[0] - focoPosInit1[0], focoPosFin1[1] - focoPosInit1[1], focoPosFin1[2] - focoPosInit1[2]};
-GLfloat focoDir1 [3] = {1,0,1};
-
-//Concentração da cor
-GLfloat concentracaoFoco = 0.5;
+GLfloat anguloFoco = 20;
 
 //Caracteristicas do candeeiro da atenuação atmosférica
 GLfloat candeeiroAttCon =1.0;
@@ -130,7 +128,7 @@ GLint ligaFocos = 0;
 //==============Init lights================//
 
 void initLights(){
-//Ambiente
+	//Ambiente
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, luzAmbienteCor);
 
 	//Candeeiro
@@ -271,7 +269,7 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("2hearts1.bmp");
+	imag.LoadBmpFile("cards/2hearts1.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
@@ -284,40 +282,136 @@ void criaDefineTexturas()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("card_back.bmp");
+	imag.LoadBmpFile("cards/card_back.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
 	//------------------------------------------- FATO
+	
+
+	// -- Player 1
 	//--- Front
-
-	glGenTextures(1, &tuxedoTextures[0]);
-	glBindTexture(GL_TEXTURE_2D, tuxedoTextures[0]);
+	glGenTextures(1, &tuxedo1Textures[0]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo1Textures[0]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("tuxedo/FRONT.bmp");
+	imag.LoadBmpFile("tuxedo/1/FRONT.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
 
-	glGenTextures(1, &tuxedoTextures[1]);
-	glBindTexture(GL_TEXTURE_2D, tuxedoTextures[1]);
+	//--- Head
+
+	glGenTextures(1, &tuxedo1Textures[1]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo1Textures[1]);
 	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	imag.LoadBmpFile("tuxedo/HEAD_FRONT.bmp");
+	imag.LoadBmpFile("tuxedo/1/HEAD_FRONT.bmp");
 	glTexImage2D(GL_TEXTURE_2D, 0, 3,
 	imag.GetNumCols(),
 		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
 		imag.ImageData());
+
+	// --- Player 2
+	//--- Front
+	glGenTextures(1, &tuxedo2Textures[0]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo2Textures[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/2/FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//--- Head
+
+	glGenTextures(1, &tuxedo2Textures[1]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo2Textures[1]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/2/HEAD_FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+
+	// --- Player 3
+	//--- Front
+	glGenTextures(1, &tuxedo3Textures[0]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo3Textures[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/3/FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//--- Head
+
+	glGenTextures(1, &tuxedo3Textures[1]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo3Textures[1]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/3/HEAD_FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	// --- Player 4
+	//--- Front
+	glGenTextures(1, &tuxedo4Textures[0]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo4Textures[0]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/4/FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
+	//--- Head
+
+	glGenTextures(1, &tuxedo4Textures[1]);
+	glBindTexture(GL_TEXTURE_2D, tuxedo4Textures[1]);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	imag.LoadBmpFile("tuxedo/4/HEAD_FRONT.bmp");
+	glTexImage2D(GL_TEXTURE_2D, 0, 3,
+	imag.GetNumCols(),
+		imag.GetNumRows(), 0, GL_RGB, GL_UNSIGNED_BYTE,
+		imag.ImageData());
+
 }
 
 
@@ -354,7 +448,7 @@ void initMaterials(int material)
 			glMaterialfv(GL_FRONT,GL_SPECULAR, goldSpec);
 			glMateriali (GL_FRONT,GL_SHININESS,goldCoef);
 			break;
-		case 6: //yellowPlastic
+		case 6: //whitePlastic
 			glMaterialfv(GL_FRONT,GL_AMBIENT,  whitePlasticAmb  );
 			glMaterialfv(GL_FRONT,GL_DIFFUSE,  whitePlasticDif );
 			glMaterialfv(GL_FRONT,GL_SPECULAR, whitePlasticSpec);
@@ -380,10 +474,6 @@ void init(void)
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbiente);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, matEspecular);
-  	glMaterialfv(GL_FRONT, GL_SHININESS, matDifusa);
-
 	initMaterials(5);
 
 	initLights();
@@ -391,6 +481,9 @@ void init(void)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
+	glEnable(GL_LIGHT2);
+	glEnable(GL_LIGHT3);
+	glEnable(GL_LIGHT4);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -408,95 +501,132 @@ void resizeWindow(GLsizei w, GLsizei h)
 
 //== Draw players one by one
 
-void drawPlayer1(){
+void drawTuxedos(){
 
-	glColor4f(BROWN);
-	//Draw front body
+	// --- Player 1
+
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,tuxedoTextures[0]);
+	glBindTexture(GL_TEXTURE_2D,tuxedo1Textures[0]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f(9.0, 0.0, -1.8);
-			glTexCoord2f(1.0f,0.0f); glVertex3f(9.0, 0.0, 1.8);
-			glTexCoord2f(1.0f,1.0f); glVertex3f(9.0, 10.0, 1.8);
-			glTexCoord2f(0.0f,1.0f); glVertex3f(9.0, 10.0, -1.8);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(8.99, 0.0, -1.5);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(8.99, 0.0, 1.5);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(8.99, 10.0, 1.5);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(8.99, 10.0, -1.5);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
-
-	//Draw back body
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 0.0, -1.8);
-		glVertex3f(10, 0.0, 1.8);
-		glVertex3f(10.0, 10.0, 1.8);
-		glVertex3f(10.0, 10.0, -1.8);
-	glEnd();
-
-	//Draw sides
-
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 0.0, -1.8);
-		glVertex3f(9.0, 0.0, -1.8);
-		glVertex3f(9.0, 10.0, -1.8);
-		glVertex3f(10.0, 10.0, -1.8);
-	glEnd();
-
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 0.0, 1.8);
-		glVertex3f(9.0, 0.0, 1.8);
-		glVertex3f(9.0, 10.0, 1.8);
-		glVertex3f(10.0, 10.0, 1.8);
-	glEnd();
-
-	// Draw front Head
+	// --- Player 2
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,tuxedoTextures[1]);
+	glBindTexture(GL_TEXTURE_2D,tuxedo2Textures[0]);
 	glPushMatrix();
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f(9.0, 10.0, -1.0);
-			glTexCoord2f(1.0f,0.0f); glVertex3f(9.0, 10.0, 1.0);
-			glTexCoord2f(1.0f,1.0f); glVertex3f(9.0, 12.0, 1.0);
-			glTexCoord2f(0.0f,1.0f); glVertex3f(9.0, 12.0, -1.0);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(1.5, 0.0, -8.99);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-1.5, 0.0, -8.99);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-1.5, 10.0, -8.99);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(1.5, 10.0, -8.99);
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 
+	// --- Player 3
 
-	// Draw back Head
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo3Textures[0]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(-8.99, 0.0, -1.5);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-8.99, 0.0, 1.5);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-8.99, 10.0, 1.5);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(-8.99, 10.0, -1.5);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 10.0, -1.0);
-		glVertex3f(10.0, 10.0, 1.0);
-		glVertex3f(10.0, 12.0, 1.0);
-		glVertex3f(10.0, 12.0, -1.0);
-	glEnd();
+	// --- Player 4
 
-	// Draw head sides
-
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 10.0, -1.0);
-		glVertex3f(9.0, 10.0, -1.0);
-		glVertex3f(9.0, 12.0, -1.0);
-		glVertex3f(10.0, 12.0, -1.0);
-	glEnd();
-
-	glBegin(GL_QUADS);
-		glVertex3f(10.0, 10.0, 1.0);
-		glVertex3f(9.0, 10.0, 1.0);
-		glVertex3f(9.0, 12.0, 1.0);
-		glVertex3f(10.0, 12.0, 1.0);
-	glEnd();
-
-	// Draw top head
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo4Textures[0]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(1.5, 0.0, 8.99);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-1.5, 0.0, 8.99);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-1.5, 10.0, 8.99);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(1.5, 10.0, 8.99);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 
 }
 
+void drawHeads(){
+
+	// --- Player 1
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo1Textures[1]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(8.99, 10.0, -1.0);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(8.99, 10.0, 1.0);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(8.99, 12.0, 1.0);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(8.99, 12.0, -1.0);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	// --- Player 2
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo2Textures[1]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(1.0, 10.0, -8.99);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-1.0, 10.0, -8.99);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-1.0, 12.0, -8.99);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(1.0, 12.0, -8.99);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	// --- Player 3
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo3Textures[1]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(-8.99, 10.0, -1.0);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-8.99, 10.0, 1.0);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-8.99, 12.0, 1.0);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(-8.99, 12.0, -1.0);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	// --- Player 4
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,tuxedo4Textures[1]);
+	glPushMatrix();
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f(1.0, 10.0, 8.99);
+			glTexCoord2f(1.0f,0.0f); glVertex3f(-1.0, 10.0, 8.99);
+			glTexCoord2f(1.0f,1.0f); glVertex3f(-1.0, 12.0, 8.99);
+			glTexCoord2f(0.0f,1.0f); glVertex3f(1.0, 12.0, 8.99);
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+}
+
+
 void drawPlayers(){
 
-	/*GLint i = 0;
-	GLfloat players[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
+	GLint i = 0;
+	GLfloat playersBodys[4][3] = {{10.0, 5.0, 0.0}, {0.0, 5.0, -10.0}, {-10.0, 5.0, 0.0}, {0.0, 5.0, 10.0}};
+
+	GLfloat playersHeads[4][3] = {{10, 11, 0}, {0, 11, -10}, {-10, 11, 0}, {0, 11, 10}};
 
 	//glColor4f(WHITE);
 	
@@ -511,16 +641,35 @@ void drawPlayers(){
 	for (i = 0; i <= 3; i++)
 	{
 		glPushMatrix();
-			glTranslatef(players[i][0], players[i][1], players[i][2]);
-			glScalef(1.0,5.0,1.0);
-			glutSolidCube(2.0);
+			glTranslatef(playersBodys[i][0], playersBodys[i][1], playersBodys[i][2]);
+			glScalef(1.0, 5.0, 1.0);
+			if (playersBodys[i][0] == 10 || playersBodys[i][0] == -10)
+			{
+				glScalef(1.0, 1.0, 1.5);
+			}
+			else{
+				glScalef(1.5, 1.0, 1.0);
+			}
+			glutSolidCube(2);
+		glPopMatrix();
+	}
+
+	for (int i = 0; i <= 3; i++)
+	{
+		glPushMatrix();
+			glTranslatef(playersHeads[i][0], playersHeads[i][1], playersHeads[i][2]);
+			glutSolidCube(2);
 		glPopMatrix();
 	}
 
 	//Cancela Materiais
 	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );*/
-	drawPlayer1();
+	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	//drawPlayer1();
+
+	drawTuxedos();
+
+	drawHeads();
 }
 
 //======================================================================== ILUMINCCAO
@@ -544,14 +693,14 @@ void iluminacao(){
 		glEnable(GL_LIGHT2);
 		glEnable(GL_LIGHT3);
 		glEnable(GL_LIGHT4);
-		printf("foco ligado\n");
+		//printf("foco ligado\n");
 	}
 	else{
 		glDisable(GL_LIGHT1);
 		glDisable(GL_LIGHT2);
 		glDisable(GL_LIGHT3);
 		glDisable(GL_LIGHT4);
-		printf("foco desligado\n");
+		//printf("foco desligado\n");
 	}
 
 	glLightfv(GL_LIGHT1, GL_POSITION,      lightsPos[0]);
@@ -641,8 +790,257 @@ void drawChips(){
 	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 }
 
-void drawCards(){
+void drawHandCards(){
+	//-----------------------------------------PLAYER 1
 
+	//LEFT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0,0,0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0,0,0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	//RIGHT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0,0,-0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0,0,-0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  7, 9.5, -0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 7, 9.5, 0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+
+	//----------------------------------------------PLAYER 2
+
+	//LEFT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5, 7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5, 7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	//RIGHT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(-0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(-0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 9.5,  7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 9.5,  7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+
+	//-----------------------------------------PLAYER 3
+
+	//LEFT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0,0,0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0,0,0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	//RIGHT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0,0,-0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0,0,-0.3);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -7, 8.5,  -0.3 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -7, 8.5,  0.3 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -7, 9.5, 0.3 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -7, 9.5, -0.3 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+
+	//----------------------------------------------PLAYER 4
+
+	//LEFT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5, -7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5, -7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	//RIGHT HAND CARD
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[0]);
+	glPushMatrix();
+		glTranslatef(-0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glCullFace(GL_FRONT);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(-0.3,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( 0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  -0.3, 8.5,  -7 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  -0.3, 9.5,  -7 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( 0.3, 9.5,  -7 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_CULL_FACE);
+}
+
+void drawTableCards(){
 	//2 of Hearts Front Card
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);
@@ -651,10 +1049,10 @@ void drawCards(){
 	glPushMatrix();
 		glTranslatef(-1.8,0,0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
@@ -665,14 +1063,66 @@ void drawCards(){
 	glPushMatrix();
 		glTranslatef(-1.8,0,0);
 		glBegin(GL_QUADS);
-			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.3,  0.3 );
-			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.3,  0.3 );
-			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.3, -0.3 );
-			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.3, -0.3 );
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
 		glEnd();
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_CULL_FACE);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(-1,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(-0.2,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(0.6,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,cards[1]);
+	glPushMatrix();
+		glTranslatef(1.4,0,0);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3f( -0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,0.0f); glVertex3f(  0.3, 8.5,  0.45 );
+			glTexCoord2f(1.0f,1.0f); glVertex3f(  0.3, 8.5, -0.45 );
+			glTexCoord2f(0.0f,1.0f); glVertex3f( -0.3, 8.5, -0.45 );
+		glEnd();
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
 }
 
 
@@ -749,12 +1199,12 @@ void drawNegativeZ(){
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	initMaterials(6);
+	initMaterials(4);
 
 	//glEnable(GL_TEXTURE_2D);
 	//glBindTexture(GL_TEXTURE_2D,texture[1]);
 	glPushMatrix();
-		glBegin(GL_QUADS);
+		glBegin(GL_QUAD_STRIP);
 				//glTexCoord2f(0.0f,0.0f); 
 			glVertex3i( -corner,  0, -corner );
 				//glTexCoord2f(1.0f,0.0f); 
@@ -763,7 +1213,6 @@ void drawNegativeZ(){
 			glVertex3i( corner, altura, -corner);
 				//glTexCoord2f(0.0f,1.0f); 
 			glVertex3i( -corner,  altura,  -corner);
-		
 		glEnd();
 	glPopMatrix();
 	//glDisable(GL_TEXTURE_2D);
@@ -867,28 +1316,28 @@ void drawMirror(){
 }
 
 void drawBoxTeaPot(){
+	//Desenha Chaleira no Meio da Mesa
 
 	glDisable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	initMaterials(5);
+	initMaterials(5); //Gold
 
 	glPushMatrix();
-		//glTranslatef(-corner+3,1.2,-corner+3);
-		glTranslatef(0,5,0);
+		glTranslatef(0,4.5,0);
 		glRotatef(angBule, 0, 1, 0);
-		glutSolidTeapot(1.5);
+		glutSolidTeapot(1.3);
 	glPopMatrix();
 
 	glEnable(GL_COLOR_MATERIAL);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
+	//Desenha caixa transparente no centro da mesa
 	glEnable(GL_BLEND);
 	glPushMatrix();
-		//glTranslatef(-corner+3,1.75,-corner+3);
 		glTranslatef(0,6,0);
 		glColor4f(WHITE_T);
-		glutSolidCube(4.5);
+		glutSolidCube(4.8);
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
@@ -924,7 +1373,8 @@ void drawScene(){
 
 	//== Draw Chips
 	drawChips();
-	drawCards();
+	drawTableCards();
+	drawHandCards();
 
 	//=== DRAW REFLECTIONS
 	glEnable(GL_STENCIL_TEST); //Activa o uso do stencil buffer
@@ -946,7 +1396,7 @@ void drawScene(){
 	//Desenha Objectos reflectidos
 	glPushMatrix();
 		glScalef(1,1,-1);
-		glTranslatef(0, 0, corner);
+		glTranslatef(0, 0, corner+2.5);
 		drawPlayers();
 		drawPositiveZ();
 		drawPositiveX();
@@ -956,6 +1406,7 @@ void drawScene(){
 		drawTableLeg();
 		drawTableLimits();
 		drawChips();
+		drawTableCards();
 		drawBoxTeaPot();
 	glPopMatrix();
 
@@ -1147,8 +1598,16 @@ void keyboard(unsigned char key, int x, int y){
 void teclasNotAscii(int key, int x, int y){
     if(key == GLUT_KEY_UP)
 		obsP[1]=obsP[1]+incy;
+		if (obsP[1] > corner)
+		{
+			obsP[1] = corner - 0.1;
+		}
 	if(key == GLUT_KEY_DOWN)
 		obsP[1]=obsP[1]-incy;
+		if (obsP[1] < 0)
+			{
+				obsP[1] = 0.1;
+			}
 
 	if (treeSixty)
 	{
