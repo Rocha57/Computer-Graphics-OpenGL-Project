@@ -51,8 +51,8 @@ GLfloat  angulo = 0.35*PI;
 
 //====== Coordenadas do observador e coordenadas para onde ele olha
 
-GLfloat  obsP[] = {0,corner,0};
-GLfloat	 olharPara[] = {raio*cos(angulo), 3, raio*sin(angulo)};
+GLfloat  obsP[] = {raio*cos(angulo),corner, raio*sin(angulo)};
+GLfloat	 olharPara[] = {0, 6, 0};
 //GLfloat	 olharPara[] = {0, 3, 0};
 
 //=======
