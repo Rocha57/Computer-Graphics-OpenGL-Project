@@ -125,6 +125,8 @@ GLint ligaLuz = 0;
 GLint treeSixty = 0;
 GLint ligaFocos = 0;
 
+char     texto[30];
+
 //==============Init lights================//
 
 void initLights(){
@@ -1196,28 +1198,25 @@ void drawFloor(int height){
 
 void drawNegativeZ(){
 
-	glDisable(GL_COLOR_MATERIAL);
-	glEnable(GL_LIGHTING);
+	//glDisable(GL_COLOR_MATERIAL);
+	//glEnable(GL_LIGHTING);
 
-	initMaterials(4);
+	//initMaterials(4);
 
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D,texture[1]);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,texture[1]);
+
 	glPushMatrix();
-		glBegin(GL_QUAD_STRIP);
-				//glTexCoord2f(0.0f,0.0f); 
-			glVertex3i( -corner,  0, -corner );
-				//glTexCoord2f(1.0f,0.0f); 
-			glVertex3i( corner, 0, -corner );
-				//glTexCoord2f(1.0f,1.0f); 
-			glVertex3i( corner, altura, -corner);
-				//glTexCoord2f(0.0f,1.0f); 
-			glVertex3i( -corner,  altura,  -corner);
+		glBegin(GL_QUADS);
+			glTexCoord2f(0.0f,0.0f); glVertex3i( -corner,  0, -corner );
+			glTexCoord2f(1.0f,0.0f); glVertex3i( corner, 0, -corner );
+			glTexCoord2f(1.0f,1.0f); glVertex3i( corner, altura, -corner);
+			glTexCoord2f(0.0f,1.0f); glVertex3i( -corner,  altura,  -corner);
 		glEnd();
 	glPopMatrix();
-	//glDisable(GL_TEXTURE_2D);
-	glEnable(GL_COLOR_MATERIAL);
-	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+	glDisable(GL_TEXTURE_2D);
+	//glEnable(GL_COLOR_MATERIAL);
+	//glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
 
 }
 
@@ -1452,6 +1451,14 @@ void drawScene(){
 
 }
 
+void desenhaTexto(char *string, GLfloat x, GLfloat y, GLfloat z) 
+{  
+	glColor4d(VERMELHO);
+	glRasterPos3f(x,y,z); 
+	while(*string)
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, *string++); 
+}
+
 
 void display(void){
 
@@ -1490,6 +1497,14 @@ void display(void){
 	drawScene();
 
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Actualizacao
+
+	// -------------------------------- Informação
+
+	if(treeSixty){
+		sprintf(texto, "Projeccao: 360º");
+		desenhaTexto(texto, 0, 16 , -corner+0.1); 
+	}
+
 	glutSwapBuffers();
 }
 
